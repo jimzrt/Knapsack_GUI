@@ -1,0 +1,8 @@
+.text-area.terminal {
+-fx-text-fill: white;
+}
+
+.text-area.terminal .content {
+    -fx-background-color: black;
+
+}
