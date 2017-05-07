@@ -24,8 +24,8 @@ public class Item {
         this.value = value;
     }
 
-    public float getRatio() {
-        return value / (float) weight;
+    public double getRatio() {
+        return value / (double) weight;
     }
 
 

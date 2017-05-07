@@ -127,6 +127,8 @@ public class MainApp extends Application {
         currentSolver = solver;
     }
 
+    public ASolver getCurrentSolver(){return currentSolver;};
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -185,7 +187,7 @@ public class MainApp extends Application {
 
     private ObservableList<String> getSolversByClassName() {
        // List<String> solvers = new ArrayList<String>();
-        String[] solverClassNames = new String[]{"DynamicSolver", "BruteForceSolver", "GreedySolver", "BranchAndBoundSolver"};
+        String[] solverClassNames = new String[]{"DynamicSolver", "DynamicSolverOpt", "BruteForceSolver", "GreedySolver", "BranchAndBoundSolver", "BranchAndBoundSolverOpt"};
 
 //        for(String solverName : solverClassNames) {
 //

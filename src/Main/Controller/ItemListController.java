@@ -2,21 +2,27 @@ package Main.Controller;
 
 import Main.MainApp;
 import Main.Model.ItemFX;
+import com.sun.javafx.scene.control.skin.LabeledText;
+import com.sun.javafx.scene.control.skin.ListViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.css.PseudoClass;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.*;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +57,9 @@ public class ItemListController {
     // Reference to the main application.
     private MainApp mainApp;
 
+    private static PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
+
+
     @FXML
     private void initialize() {
 
@@ -70,9 +79,50 @@ public class ItemListController {
 
         });
 
+
+
+
+        solverList.cellFactoryProperty().set(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+
+
+                ListCell cell = new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item != null) {
+                            setText(item);
+                            pseudoClassStateChanged(ACTIVE_PSEUDO_CLASS, mainApp.getCurrentSolver() != null && mainApp.getCurrentSolver().getClass().toString().endsWith(getText()));
+
+                        } else {
+                            setText("");
+                        }
+                    }
+
+                };
+
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED,(event) -> {
+                        if (event.getClickCount() == 2) {
+                          //  System.out.println("double clicked!");
+                            ListCell c = (ListCell) event.getSource();
+                            if(!c.getText().equals("")){
+                                handleLoadSolver();
+                            }
+
+                        }
+
+                });
+
+                return cell;
+
+            }
+        });
+
         spinnerImage.setImage(new Image("/Main/View/Images/spinner.gif"));
 
     }
+
 
     @FXML
     private void handleAddItem() {
@@ -151,6 +201,7 @@ public class ItemListController {
 
         if (className != null) {
             mainApp.loadSolver(className, terminalBuffer);
+            solverList.refresh();
         }
 
 

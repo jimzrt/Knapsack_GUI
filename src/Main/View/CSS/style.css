@@ -6,3 +6,7 @@
     -fx-background-color: derive(#1d1d1d,60%)
 
 }
+
+.list-cell:active {
+-fx-background-color: darkseagreen;
+}
