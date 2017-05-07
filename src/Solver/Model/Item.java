@@ -6,6 +6,7 @@ public class Item {
     private int weight;
     private int value;
 
+
     public Item(int weight, int value){
         this.weight=weight;
         this.value=value;
@@ -23,8 +24,14 @@ public class Item {
         this.value = value;
     }
 
+    public float getRatio() {
+        return value / (float) weight;
+    }
+
+    ;
+
     public String toString(){
-        return "(" + weight + ", " + value + ")";
+        return "(w: " + weight + ", v: " + value + ")";
     }
 
 }

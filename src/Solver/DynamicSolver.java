@@ -8,13 +8,17 @@ import java.util.List;
 /**
  * Created by james on 06.05.2017.
  */
-public class DynamicSolver implements ISolver{
+public class DynamicSolver extends ASolver {
 
-    boolean isFinished = false;
     int[][] matrix;
-    List<Item> items;
-    List<Item> itemSelection;
-    int capacity;
+
+    public DynamicSolver() {
+
+    }
+
+    public DynamicSolver(List<Item> items, int capacity) {
+        super(items, capacity);
+    }
 
     @Override
     public String getName() {
@@ -26,21 +30,23 @@ public class DynamicSolver implements ISolver{
         return "yay";
     }
 
-    @Override
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 
-    @Override
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
 
     @Override
     public void solve() {
-        this.matrix = buildMatrix(this.items,this.capacity);
+        setTerminalText("Erstelle Matrix...");
+        try {
+            this.matrix = buildMatrix(this.items, this.capacity);
+
+        } catch (Throwable ex) {
+            System.err.println("Uncaught exception - " + ex.getMessage());
+            ex.printStackTrace(System.err);
+        }
+
+        setTerminalText("Berechne Item-Selektion..");
         this.itemSelection = getItemSelection(this.items,this.matrix);
         this.isFinished = true;
+        setTerminalText(" ");
     }
 
     @Override
@@ -48,33 +54,14 @@ public class DynamicSolver implements ISolver{
         return 0;
     }
 
-    @Override
-    public boolean isFinished() {
-        return this.isFinished;
-    }
 
-    @Override
-    public List<Item> getSelection() {
-        return this.itemSelection;
-    }
 
-    @Override
-    public int getTotalWeight() {
-
-            return this.itemSelection.stream().mapToInt(Item::getWeight).sum();
-
-    }
-
-    @Override
-    public int getMaxValueSum() {
-        return this.matrix[ this.matrix.length-1][ this.matrix[0].length-1];
-    }
 
 
     public int[][] buildMatrix(List<Item> items, int weight){
         int rows = items.size()+1;
         int columns = weight+1;
-        int[][] matrix = new int[rows][columns];
+        int[][] matrix = new int[10000][50000];
 
 
 
@@ -131,7 +118,4 @@ public class DynamicSolver implements ISolver{
 
     }
 
-    private int getMaxValueSum(int[][] matrix){
-       return matrix[matrix.length-1][matrix[0].length-1];
-    }
 }

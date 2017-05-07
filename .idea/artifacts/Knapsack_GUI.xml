@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Knapsack_GUI">
+    <output-path>$PROJECT_DIR$/out/artifacts/Knapsack_GUI</output-path>
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="Main.MainApp" />
+        <option name="convertCss2Bin" value="true" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Knapsack_GUI.jar">
+        <element id="module-output" name="Knapsack_GUI" />
+      </element>
+    </root>
+  </artifact>
+</component>

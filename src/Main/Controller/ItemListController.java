@@ -2,20 +2,42 @@ package Main.Controller;
 
 import Main.MainApp;
 import Main.Model.ItemFX;
-import Solver.ISolver;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.util.Callback;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by james on 06.05.2017.
  */
 public class ItemListController {
 
+    ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+        public Thread newThread(Runnable r) {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            return t;
+        }
+    });
+    SimpleStringProperty terminalBuffer = new SimpleStringProperty();
+    @FXML
+    private ImageView spinnerImage;
     @FXML
     private ListView<ItemFX> itemList;
     @FXML
@@ -24,24 +46,33 @@ public class ItemListController {
     private TextField weightField;
     @FXML
     private TextField valueField;
-
     @FXML
     private TextField capacityField;
-
     @FXML
     private TextArea terminal;
-
     // Reference to the main application.
     private MainApp mainApp;
 
     @FXML
     private void initialize() {
 
+
         this.capacityField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.matches("[0-9]+")){
-                mainApp.getCapacity().set(Integer.valueOf(newValue));
+                mainApp.getCapacity().set(newValue);
             }
         });
+
+        terminalBuffer.addListener((observable, oldValue, newValue) -> {
+            if (newValue != "") {
+                terminal.appendText(newValue + "\n");
+            } else {
+                terminalBuffer.setValue("");
+            }
+
+        });
+
+        spinnerImage.setImage(new Image("/Main/View/Images/spinner.gif"));
 
     }
 
@@ -52,7 +83,7 @@ public class ItemListController {
             int value = Integer.valueOf(valueField.getText());
             ItemFX newItem = new ItemFX(weight,value);
             mainApp.getItems().add(newItem);
-
+            //FXCollections.sort(mainApp.getItems(),Comparator.comparingInt(ItemFX::getWeight));
             weightField.setText("");
             valueField.setText("");
         }else {
@@ -85,46 +116,143 @@ public class ItemListController {
     }
 
     @FXML
-    private void handleLoadSolver(){
-        String className = solverList.getSelectionModel().getSelectedItem();
-        if(className != null){
-            Class<?> clazz = null;
-            ISolver solver = null;
-            try {
-                clazz = Class.forName(className);
-            } catch (ClassNotFoundException e) {
+    private void handleSave() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Knapsack Problem");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text", "*.txt")
+        );
+        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+
+                //first line capacity and Length
+                bw.write(mainApp.getCapacity().get() + " " + mainApp.getItems().size());
+                bw.newLine();
+                for (ItemFX item : mainApp.getItems()) {
+                    bw.write(item.getWeight() + " " + item.getValue());
+                    bw.newLine();
+                }
+
+            } catch (IOException e) {
+
                 e.printStackTrace();
+
             }
-            Constructor<?> ctor = null;
-            try {
-                ctor = clazz.getConstructor();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            try {
-                solver = (ISolver) ctor.newInstance();
-                mainApp.setCurrentSolver(solver);
-                terminal.appendText("=== " + solver.getName() + " geladen. ===\n");
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+
+
         }
 
     }
 
-    public void handleSolve(){
-        terminal.appendText("Löse...\n");
-        mainApp.solve();
-         ObservableList<ItemFX> items = mainApp.getSelectedItems();
-         for(ItemFX item : items){
-             terminal.appendText(item + "\n");
-         }
+    @FXML
+    private void handleLoadSolver(){
+        String className = solverList.getSelectionModel().getSelectedItem();
+
+        if (className != null) {
+            mainApp.loadSolver(className, terminalBuffer);
+        }
+
+
     }
 
+    @FXML
+    public void handleSolve() {
+
+        spinnerImage.visibleProperty().set(true);
+        mainApp.solve(terminalBuffer);
+
+        executor.submit(() -> {
+
+            while (mainApp.isComputing()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Platform.runLater(() -> {
+                spinnerImage.visibleProperty().set(false);
+            });
+
+        });
+
+
+    }
+
+    @FXML
+    public void handleRandomDialog() {
+
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(mainApp.getClass().getResource("/Main/View/RandomItemsDialog.fxml"));
+            Pane page = (Pane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Zufall");
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(mainApp.getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            RandomItemsDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setItemList(mainApp.getItems());
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            // FXCollections.sort(mainApp.getItems(),Comparator.comparingInt(ItemFX::getWeight));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @FXML
+    public void handleFileImport() {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Knapsack Problem");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text", "*.txt")
+        );
+        File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+            mainApp.getItems().clear();
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+                //first line capacity and Length
+                String first = br.readLine();
+                mainApp.getCapacity().set(first.split(" ")[0]);
+                for (int i = 0; i < Integer.valueOf(first.split(" ")[1]); i++) {
+                    String itemString = br.readLine();
+                    int weight = Integer.valueOf(itemString.split(" ")[0]);
+                    int value = Integer.valueOf(itemString.split(" ")[1]);
+                    mainApp.getItems().add(new ItemFX(weight, value));
+                }
+
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
+
+
+        }
+
+
+    }
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
 
@@ -132,6 +260,8 @@ public class ItemListController {
         itemList.setItems(mainApp.getItems());
 
         solverList.setItems(mainApp.getSolvers());
+
+        capacityField.textProperty().bindBidirectional(mainApp.getCapacity());
 
     }
 

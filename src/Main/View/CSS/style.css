@@ -3,6 +3,6 @@
 }
 
 .text-area.terminal .content {
-    -fx-background-color: black;
+    -fx-background-color: derive(#1d1d1d,60%)
 
 }
