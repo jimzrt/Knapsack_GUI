@@ -5,17 +5,15 @@ import Solver.Model.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by james on 06.05.2017.
- */
+
 public class DynamicSolver extends ASolver {
 
-    int[][] matrix;
+    private int[][] matrix;
+
 
     public DynamicSolver() {
-
+        super();
     }
-
     public DynamicSolver(List<Item> items, int capacity) {
         super(items, capacity);
     }
@@ -55,13 +53,10 @@ public class DynamicSolver extends ASolver {
     }
 
 
-
-
-
-    public int[][] buildMatrix(List<Item> items, int weight){
+    private int[][] buildMatrix(List<Item> items, int weight) {
         int rows = items.size()+1;
         int columns = weight+1;
-        int[][] matrix = new int[10000][50000];
+        int[][] matrix = new int[rows][columns];
 
 
 
@@ -96,9 +91,9 @@ public class DynamicSolver extends ASolver {
 
     }
 
-    public List<Item> getItemSelection(List<Item> items, int[][] matrix){
+    private List<Item> getItemSelection(List<Item> items, int[][] matrix) {
 
-        List<Item> itemSelection = new ArrayList<Item>();
+        List<Item> itemSelection = new ArrayList<>();
         int row = matrix.length-1;
         int col = matrix[0].length-1;
 

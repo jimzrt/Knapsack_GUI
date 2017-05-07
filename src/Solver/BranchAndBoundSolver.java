@@ -9,9 +9,7 @@ import java.util.PriorityQueue;
 
 import static java.util.Comparator.reverseOrder;
 
-/**
- * Created by james on 06.05.2017.
- */
+
 public class BranchAndBoundSolver extends ASolver {
 
     @Override
@@ -35,7 +33,7 @@ public class BranchAndBoundSolver extends ASolver {
         Node root = new Node();
         root.computeBound();
 
-        PriorityQueue<Node> q = new PriorityQueue<Node>();
+        PriorityQueue<Node> q = new PriorityQueue<>();
         q.offer(root);
 
         while (true) {
@@ -90,19 +88,19 @@ public class BranchAndBoundSolver extends ASolver {
 
     private class Node implements Comparable<Node> {
 
-        public int h;
-        public double bound;
-        public double value;
-        public double weight;
+        int h;
+        double bound;
+        double value;
+        double weight;
         List<Item> taken;
 
         public Node() {
-            taken = new ArrayList<Item>();
+            taken = new ArrayList<>();
         }
 
         public Node(Node parent) {
             h = parent.h + 1;
-            taken = new ArrayList<Item>(parent.taken);
+            taken = new ArrayList<>(parent.taken);
             bound = parent.bound;
             value = parent.value;
             weight = parent.weight;
@@ -113,7 +111,7 @@ public class BranchAndBoundSolver extends ASolver {
             return (int) (other.bound - bound);
         }
 
-        public void computeBound() {
+        void computeBound() {
             int i = h;
             double w = weight;
             bound = value;

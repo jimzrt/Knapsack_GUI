@@ -8,24 +8,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Created by james on 06.05.2017.
- */
+
 public abstract class ASolver {
 
     List<Item> items;
     int capacity;
 
-    List<Item> itemSelection = new ArrayList<Item>();
+    List<Item> itemSelection = new ArrayList<>();
 
     boolean isFinished = false;
 
-    SimpleStringProperty outputBuffer = new SimpleStringProperty();
+    private SimpleStringProperty outputBuffer = new SimpleStringProperty();
 
     public ASolver() {
-
-
     }
+
 
     public ASolver(List<Item> items, int capacity) {
         this.items = items;
@@ -44,13 +41,10 @@ public abstract class ASolver {
         this.items = items;
     }
 
-    ;
-
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
-    ;
 
     public abstract void solve();
 
@@ -60,38 +54,32 @@ public abstract class ASolver {
         return isFinished;
     }
 
-    ;
 
     public List<Item> getItemSelection() {
         itemSelection.sort(Comparator.comparing(Item::getWeight));
         return itemSelection;
     }
 
-    ;
 
     public int getTotalWeight() {
         return getTotalWeight(itemSelection);
     }
 
-    ;
 
     public int getTotalWeight(List<Item> items) {
         return items.stream().mapToInt(Item::getWeight).sum();
     }
 
-    ;
 
     public int getMaxValueSum() {
         return getMaxValueSum(itemSelection);
     }
 
-    ;
 
     public int getMaxValueSum(List<Item> items) {
         return items.stream().mapToInt(Item::getValue).sum();
     }
 
-    ;
 
     public void setTerminalText(String text) {
         Platform.runLater(() -> {

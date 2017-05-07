@@ -28,7 +28,6 @@ public class Item {
         return value / (float) weight;
     }
 
-    ;
 
     public String toString(){
         return "(w: " + weight + ", v: " + value + ")";

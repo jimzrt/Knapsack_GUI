@@ -8,9 +8,7 @@ import java.util.List;
 
 import static java.util.Comparator.reverseOrder;
 
-/**
- * Created by james on 06.05.2017.
- */
+
 public class GreedySolver extends ASolver {
     @Override
     public String getName() {
@@ -25,13 +23,12 @@ public class GreedySolver extends ASolver {
     @Override
     public void solve() {
         itemSelection.clear();
-        List<Item> greedyItems = new ArrayList<Item>(items);
+        List<Item> greedyItems = new ArrayList<>(items);
         greedyItems.sort(Comparator.comparing(Item::getRatio, reverseOrder()));
 
         double capUsed = 0;
 
-        for (int i = 0; i < greedyItems.size(); i++) {
-            Item item = greedyItems.get(i);
+        for (Item item : greedyItems) {
             if (capUsed + item.getWeight() > capacity) continue;
 
             capUsed += item.getWeight();

@@ -23,19 +23,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-/**
- * Created by james on 06.05.2017.
- */
+
 public class ItemListController {
 
-    ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+    SimpleStringProperty terminalBuffer = new SimpleStringProperty();
+    private ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         public Thread newThread(Runnable r) {
             Thread t = Executors.defaultThreadFactory().newThread(r);
             t.setDaemon(true);
             return t;
         }
     });
-    SimpleStringProperty terminalBuffer = new SimpleStringProperty();
     @FXML
     private ImageView spinnerImage;
     @FXML
