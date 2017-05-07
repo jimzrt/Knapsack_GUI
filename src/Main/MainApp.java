@@ -187,7 +187,7 @@ public class MainApp extends Application {
 
     private ObservableList<String> getSolversByClassName() {
        // List<String> solvers = new ArrayList<String>();
-        String[] solverClassNames = new String[]{"DynamicSolver", "DynamicSolverOpt", "BruteForceSolver", "GreedySolver", "BranchAndBoundSolver", "BranchAndBoundSolverOpt"};
+        String[] solverClassNames = new String[]{"DynamicSolver", "DynamicSolverOpt", "BruteForceSolver", "GreedySolver",  "BranchAndBoundSolver"};
 
 //        for(String solverName : solverClassNames) {
 //

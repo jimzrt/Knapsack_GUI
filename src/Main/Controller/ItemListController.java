@@ -42,6 +42,10 @@ public class ItemListController {
     });
     @FXML
     private ImageView spinnerImage;
+
+    @FXML
+    private ImageView decorationImagView;
+
     @FXML
     private ListView<ItemFX> itemList;
     @FXML
@@ -120,7 +124,14 @@ public class ItemListController {
         });
 
         spinnerImage.setImage(new Image("/Main/View/Images/spinner.gif"));
+        spinnerImage.setFitHeight(120);
+        spinnerImage.setFitWidth(120);
+        spinnerImage.setPreserveRatio(true);
 
+        decorationImagView.setImage(new Image("/Main/View/Images/knap.png"));
+        decorationImagView.setFitHeight(180);
+        decorationImagView.setFitWidth(180);
+        decorationImagView.setPreserveRatio(true);
     }
 
 
@@ -211,6 +222,7 @@ public class ItemListController {
     public void handleSolve() {
 
         spinnerImage.visibleProperty().set(true);
+        decorationImagView.visibleProperty().set(false);
         mainApp.solve(terminalBuffer);
 
         executor.submit(() -> {
@@ -224,6 +236,7 @@ public class ItemListController {
             }
             Platform.runLater(() -> {
                 spinnerImage.visibleProperty().set(false);
+                decorationImagView.visibleProperty().set(true);
             });
 
         });

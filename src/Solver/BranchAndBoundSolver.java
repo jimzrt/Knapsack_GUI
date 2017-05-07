@@ -26,13 +26,57 @@ public class BranchAndBoundSolver extends ASolver {
         items.sort(Comparator.comparing(Item::getRatio, reverseOrder()));
 
 
-        Node best = makeKnapSack();
+        Node best = new Node();
+        Node root = new Node();
+        // root.level = -1;
+        root.computeBound();
 
+        Queue<Node> q = new ArrayDeque<>();
+        q.offer(root);
+
+        while (!q.isEmpty()) {
+
+            Node node = q.poll();
+
+            // If there is nothing on next level
+            if (node.level == items.size())
+                continue;
+
+
+            if (node.bound > best.value) {
+
+
+                Node with = new Node(node);
+                Item item = items.get(node.level);
+                with.weight += item.getWeight();
+
+                if (with.weight <= capacity) {
+                    with.taken.add(items.get(node.level));
+                    with.value += item.getValue();
+                    with.computeBound();
+
+                    if (with.value > best.value) {
+                        best = with;
+                    }
+                    if (with.bound > best.value) {
+                        q.offer(with);
+                    }
+                }
+
+                Node without = new Node(node);
+                without.computeBound();
+
+                if (without.bound > best.value) {
+                    q.offer(without);
+                }
+
+
+
+            }
+        }
+
+        System.out.println("done");
         itemSelection = best.taken;
-        System.out.println(best.value);
-
-
-
 
 
     }
@@ -42,70 +86,10 @@ public class BranchAndBoundSolver extends ASolver {
         return 0;
     }
 
-    public Node makeKnapSack()
-    {
-        Queue<Node> q = new PriorityQueue<>();
-        List<Item> itemInKnapsack = items;
-        int numItems=itemInKnapsack.size();
-        int maxWeight = capacity;
-        int maxProfit = 0;
-        //creates root node
-        Node v= new Node();
-        Node u;
-        //initilizes the max profit, bound, and maxprofit node according to values of node v
-       v.computeBound();
-        Node maxProfitNode = v;
-        //adds root to the queue
-        q.add(v);
-        while(!(q.isEmpty()))
-        {
-            ArrayList<Item> parentList = new ArrayList<>();
-            //creates a temp node that refers to the first item in the priority queue and then removes that item
-            Node tempNode = q.peek();
-            q.remove();
-            //checks if the bound is greater than the current maximum profit
-            if(tempNode.bound > maxProfit)
-            {
-                //adds the items of the parent node to the temp node
-                parentList.addAll(tempNode.taken);
-                //creates a new node that is the child of the temp node
-                u = new Node(tempNode);
-                u.weight += itemInKnapsack.get(u.level).getWeight();
-                u.value += itemInKnapsack.get(u.level).getValue();
-
-                //sets the bound
-                u.computeBound();
-                //determines if the childs weight is less than max and profit is greater than current max and adds it to the list of items
-                //changes the maxProfit, and sets the child to be the node at which the best profit is determined at
-                u.taken.add(itemInKnapsack.get(u.level));
-                if(u.weight <= maxWeight && u.value > maxProfit)
-                {
-
-                    maxProfit = u.value;
-                    maxProfitNode = u;
-                }
-                //if the bound at child is better than the max profit and it is not the last item the child is added to the queue
-                if(u.bound > maxProfit && u.level < numItems-1)
-                {
-                    q.add(u);
-                }
-                //the temporary node level is incremented and bound is set to the new bound of the incramented temp node
-                tempNode.level++;
-                tempNode.computeBound();
-                //if the temp node's bound is higher than the max profit and it is not the last item it is added to the queue
-                if(tempNode.bound > maxProfit && u.level < numItems-1) {
-                    q.add(tempNode);
-                }
-            }
-        }
-        //the node contianing the maxProfit is returned.  Also contains the optimal solution to the knapsack problem
-        return maxProfitNode;
-    }
-
     private class Node implements Comparable<Node> {
 
         int level;
-        double bound;
+        int bound;
         int value;
         int weight;
         List<Item> taken;
@@ -124,7 +108,7 @@ public class BranchAndBoundSolver extends ASolver {
 
         // Sort by bound
         public int compareTo(Node other) {
-            return (int) (other.bound - bound);
+            return  (other.bound - bound);
         }
 
         void computeBound() {
