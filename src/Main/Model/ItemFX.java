@@ -41,6 +41,6 @@ public class ItemFX {
     }
 
     public String toString(){
-        return "( w: " + getWeight() + ", v: " + getValue() + ")";
+        return "Gewicht: " + getWeight() + "kg, Wert: " + getValue() + "€";
     }
 }

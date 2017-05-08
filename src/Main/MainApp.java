@@ -4,6 +4,7 @@ import Main.Controller.ItemListController;
 import Main.Model.ItemFX;
 import Main.Util.Converter;
 import Solver.ASolver;
+import Solver.Model.Item;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -94,7 +96,21 @@ public class MainApp extends Application {
                 Platform.runLater(() -> {
                     terminalBuffer.setValue("Maximaler Wert: " + currentSolver.getMaxValueSum());
                     terminalBuffer.setValue("Gewicht: " + currentSolver.getTotalWeight());
-                    terminalBuffer.setValue("Ausgewählte Items: " + currentSolver.getItemSelection());
+                    terminalBuffer.setValue("Ausgewählte Gegenstände: ");
+
+                    int paddingZeros = (int) Math.log10(currentSolver.getItemSelection().size());
+
+                    int index = 1;
+                    String zeros;
+                    for(Item item : currentSolver.getItemSelection()){
+                        if(paddingZeros > 0){
+                            zeros =  String.format("%0"+(paddingZeros+1)+"d", index);
+                        } else {
+                            zeros = "" + index;
+                        }
+                        terminalBuffer.set("Gegenstand " + zeros + ": \t " + item.toString());
+                        index++;
+                    }
                     terminalBuffer.setValue("_______________________\n");
 
 
