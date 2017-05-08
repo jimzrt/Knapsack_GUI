@@ -7,24 +7,24 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="623.0" prefWidth="999.0" styleClass="background"
+      minWidth="-Infinity" prefHeight="623.0" prefWidth="1028.0" styleClass="background"
       xmlns="http://javafx.com/javafx/8.0.111" fx:controller="Main.Controller.ItemListController">
    <children>
        <Separator layoutX="15.0" layoutY="448.0" prefHeight="3.0" prefWidth="226.0" />
-       <TextField fx:id="capacityField" layoutX="109.0" layoutY="41.0" prefHeight="25.0" prefWidth="113.0"/>
-       <Label layoutX="803.0" layoutY="44.0" text="Solver:"/>
-       <ListView fx:id="solverList" focusTraversable="false" layoutX="803.0" layoutY="65.0" prefHeight="190.0"
+       <TextField fx:id="capacityField" layoutX="141.0" layoutY="41.0" prefHeight="25.0" prefWidth="81.0"/>
+       <Label layoutX="834.0" layoutY="44.0" text="Solver:"/>
+       <ListView fx:id="solverList" focusTraversable="false" layoutX="834.0" layoutY="65.0" prefHeight="190.0"
                  prefWidth="182.0"/>
-       <Button layoutX="803.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleLoadSolver" prefHeight="25.0"
+       <Button layoutX="834.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleLoadSolver" prefHeight="25.0"
                prefWidth="182.0" text="Lade"/>
-       <Button id="dark-blue" layoutX="807.0" layoutY="556.0" mnemonicParsing="false" onAction="#handleSolve"
+       <Button id="dark-blue" layoutX="838.0" layoutY="556.0" mnemonicParsing="false" onAction="#handleSolve"
                prefHeight="50.0" prefWidth="172.0" text="Berechne...">
          <font>
              <Font size="23.0"/>
          </font>
        </Button>
        <Separator layoutX="15.0" layoutY="75.0" prefHeight="3.0" prefWidth="226.0" />
-       <MenuBar prefHeight="25.0" prefWidth="999.0">
+       <MenuBar prefHeight="25.0" prefWidth="1028.0">
            <menus>
                <Menu mnemonicParsing="false" text="Import">
                    <items>
@@ -52,9 +52,12 @@
                    <children>
                        <Label layoutX="9.0" layoutY="24.0" text="Gewicht:" />
                        <Label layoutX="9.0" layoutY="65.0" text="Wert:" />
-                       <TextField fx:id="weightField" layoutX="61.0" layoutY="20.0" />
-                       <TextField fx:id="valueField" layoutX="61.0" layoutY="61.0" />
+                       <TextField fx:id="weightField" layoutX="100.0" layoutY="20.0" prefHeight="25.0"
+                                  prefWidth="89.0"/>
+                       <TextField fx:id="valueField" layoutX="100.0" layoutY="61.0" prefHeight="25.0" prefWidth="89.0"/>
                        <Button layoutX="-1.0" layoutY="96.0" mnemonicParsing="false" onAction="#handleAddItem" prefHeight="25.0" prefWidth="226.0" text="Hinzufügen" />
+                       <Label layoutX="196.0" layoutY="26.0" text="kg"/>
+                       <Label layoutX="196.0" layoutY="65.0" text="€"/>
                    </children>
                </AnchorPane>
            </content>
@@ -68,7 +71,7 @@
        <Label layoutX="227.0" layoutY="45.0" text="kg"/>
        <Pane fx:id="waitPane" layoutY="-2.0" prefHeight="630.0" prefWidth="950.0" visible="false"/>
        <TextArea fx:id="terminal" editable="false" focusTraversable="false" layoutX="253.0" layoutY="41.0"
-                 prefHeight="567.0" prefWidth="541.0" styleClass="terminal" wrapText="true">
+                 prefHeight="567.0" prefWidth="572.0" styleClass="terminal" wrapText="true">
            <font>
                <Font name="Liberation Mono" size="12.0"/>
            </font>

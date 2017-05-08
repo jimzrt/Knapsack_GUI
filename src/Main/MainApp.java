@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -135,9 +136,16 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Font robo = Font.loadFont(getClass().getResource("/Main/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
+        Font robomono = Font.loadFont(getClass().getResource("/Main/View/Fonts/RobotoMono-Regular.ttf").toExternalForm(), 12);
+
+        System.out.println(robo.getFamily());
+        System.out.println(robomono.getFamily());
+
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Rucksackproblem - Löser");
         primaryStage.setResizable(false);
+
         //setUserAgentStylesheet(STYLESHEET_MODENA);
 
         initRootLayout();

@@ -1,9 +1,18 @@
+
+.text {
+    -fx-font-family: "Roboto";
+
+}
+
 .text-area.terminal {
 -fx-text-fill: white;
+     -fx-font-family: "Roboto Mono";
+    -fx-font-size: 12px;
 }
 
 .text-area.terminal .content {
-    -fx-background-color: derive(#1d1d1d,60%)
+    -fx-background-color: derive(#1d1d1d,60%);
+
 
 }
 
