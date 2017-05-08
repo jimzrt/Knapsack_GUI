@@ -78,7 +78,7 @@ public class MainApp extends Application {
 
         // System.out.println(terminalBuffer.get());
         if (currentSolver instanceof ASolver) {
-            terminalBuffer.setValue("Löse " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
+            terminalBuffer.setValue("Berechne " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
 
             //TODO:Validation
 
