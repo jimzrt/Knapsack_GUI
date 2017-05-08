@@ -29,21 +29,43 @@ public class BruteForceSolver extends ASolver {
 
     @Override
     public void solve() {
-        int bestValue = 0;
-        List<Item> selection = new ArrayList<>();
-        for (List<Item> subset : sublists(items)) {
-            int weight = getTotalWeight(subset);
-            if (weight <= capacity) {
-                int value = getMaxValueSum(subset);
-                if (value > bestValue) {
-                    bestValue = value;
-                    selection = subset;
-                }
-            }
-        }
-        this.itemSelection = selection;
+
+        itemSelection.clear();
+        RecursiveKnapsack(items.size() - 1, capacity, itemSelection);
+
+
 
     }
+
+    int RecursiveKnapsack(int i, int w, List<Item> taken) {
+        if (i < 0 || w == 0)
+            return 0;
+
+        if (items.get(i).getWeight() > w) {
+            return RecursiveKnapsack(i - 1, w, taken);
+        } else {
+
+            final int preTookSize = taken.size();
+            int with = RecursiveKnapsack(i - 1, w - items.get(i).getWeight(), taken) + items.get(i).getValue();
+
+            final int preLeftSize = taken.size();
+            int without = RecursiveKnapsack(i - 1, w, taken);
+
+            if (with > without) {
+                if (taken.size() > preLeftSize)
+                    taken.subList(preLeftSize, taken.size()).clear();
+                taken.add(items.get(i));
+                return with;
+            } else {
+                if (preLeftSize > preTookSize)
+                    taken.subList(preTookSize, preLeftSize).clear();
+                return without;
+            }
+
+
+        }
+    }
+
 
     @Override
     public int getProgress() {

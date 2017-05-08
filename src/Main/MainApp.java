@@ -78,7 +78,7 @@ public class MainApp extends Application {
 
         // System.out.println(terminalBuffer.get());
         if (currentSolver instanceof ASolver) {
-            terminalBuffer.setValue("Löse " + getItems().size() + " Items und " + getCapacity().get() + "kg Kapazität mit " + currentSolver.getName() + "...\n");
+            terminalBuffer.setValue("Löse " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
 
             //TODO:Validation
 
@@ -123,11 +123,15 @@ public class MainApp extends Application {
 
     ;
 
+    public ASolver getCurrentSolver() {
+        return currentSolver;
+    }
+
     public void setCurrentSolver(ASolver solver) {
         currentSolver = solver;
     }
 
-    public ASolver getCurrentSolver(){return currentSolver;};
+    ;
 
     @Override
     public void start(Stage primaryStage) {

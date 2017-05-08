@@ -2,13 +2,9 @@ package Main.Controller;
 
 import Main.MainApp;
 import Main.Model.ItemFX;
-import com.sun.javafx.scene.control.skin.LabeledText;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.css.PseudoClass;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,9 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,6 +26,7 @@ import java.util.concurrent.ThreadFactory;
 
 public class ItemListController {
 
+    private static PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
     SimpleStringProperty terminalBuffer = new SimpleStringProperty();
     private ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         public Thread newThread(Runnable r) {
@@ -42,10 +37,10 @@ public class ItemListController {
     });
     @FXML
     private ImageView spinnerImage;
-
     @FXML
-    private ImageView decorationImagView;
-
+    private ImageView decorationImageView;
+    @FXML
+    private Pane waitPane;
     @FXML
     private ListView<ItemFX> itemList;
     @FXML
@@ -60,9 +55,6 @@ public class ItemListController {
     private TextArea terminal;
     // Reference to the main application.
     private MainApp mainApp;
-
-    private static PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
-
 
     @FXML
     private void initialize() {
@@ -128,10 +120,35 @@ public class ItemListController {
         spinnerImage.setFitWidth(120);
         spinnerImage.setPreserveRatio(true);
 
-        decorationImagView.setImage(new Image("/Main/View/Images/knap.png"));
-        decorationImagView.setFitHeight(180);
-        decorationImagView.setFitWidth(180);
-        decorationImagView.setPreserveRatio(true);
+        decorationImageView.setImage(new Image("/Main/View/Images/knap.png"));
+        decorationImageView.setFitHeight(180);
+        decorationImageView.setFitWidth(180);
+        decorationImageView.setPreserveRatio(true);
+
+
+        terminalBuffer.set("\n██████╗  █████╗ ███████╗                                              \n" +
+                "██╔══██╗██╔══██╗██╔════╝                                              \n" +
+                "██║  ██║███████║███████╗                                              \n" +
+                "██║  ██║██╔══██║╚════██║                                              \n" +
+                "██████╔╝██║  ██║███████║                                              \n" +
+                "╚═════╝ ╚═╝  ╚═╝╚══════╝                                              \n" +
+                "██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗ █████╗  ██████╗██╗  ██╗     \n" +
+                "██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗██╔════╝██║ ██╔╝     \n" +
+                "██████╔╝██║   ██║██║     █████╔╝ ███████╗███████║██║     █████╔╝█████╗\n" +
+                "██╔══██╗██║   ██║██║     ██╔═██╗ ╚════██║██╔══██║██║     ██╔═██╗╚════╝\n" +
+                "██║  ██║╚██████╔╝╚██████╗██║  ██╗███████║██║  ██║╚██████╗██║  ██╗     \n" +
+                "╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝     \n" +
+                "██████╗ ██████╗  ██████╗ ██████╗ ██╗     ███████╗███╗   ███╗          \n" +
+                "██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██║     ██╔════╝████╗ ████║          \n" +
+                "██████╔╝██████╔╝██║   ██║██████╔╝██║     █████╗  ██╔████╔██║          \n" +
+                "██╔═══╝ ██╔══██╗██║   ██║██╔══██╗██║     ██╔══╝  ██║╚██╔╝██║          \n" +
+                "██║     ██║  ██║╚██████╔╝██████╔╝███████╗███████╗██║ ╚═╝ ██║          \n" +
+                "╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝          ");
+
+        terminalBuffer.set("\nBeschreibung:\n----------------");
+        terminalBuffer.set("Das Rucksackproblem ist ein Optimierungsproblem der Kombinatorik. Aus einer Menge von Objekten, die jeweils ein Gewicht und einen Nutzwert haben, soll eine Teilmenge ausgewählt werden, deren Gesamtgewicht eine vorgegebene Gewichtsschranke nicht überschreitet. Unter dieser Bedingung soll der Nutzwert der ausgewählten Objekte maximiert werden.");
+        terminalBuffer.set("\n\nBenutzung:\n----------------");
+        terminalBuffer.set("");
     }
 
 
@@ -211,8 +228,10 @@ public class ItemListController {
         String className = solverList.getSelectionModel().getSelectedItem();
 
         if (className != null) {
-            mainApp.loadSolver(className, terminalBuffer);
-            solverList.refresh();
+            if (mainApp.getCurrentSolver() == null || !mainApp.getCurrentSolver().getClass().toString().endsWith(className)) {
+                mainApp.loadSolver(className, terminalBuffer);
+                solverList.refresh();
+            }
         }
 
 
@@ -222,7 +241,8 @@ public class ItemListController {
     public void handleSolve() {
 
         spinnerImage.visibleProperty().set(true);
-        decorationImagView.visibleProperty().set(false);
+        decorationImageView.visibleProperty().set(false);
+        waitPane.visibleProperty().set(true);
         mainApp.solve(terminalBuffer);
 
         executor.submit(() -> {
@@ -236,7 +256,9 @@ public class ItemListController {
             }
             Platform.runLater(() -> {
                 spinnerImage.visibleProperty().set(false);
-                decorationImagView.visibleProperty().set(true);
+                decorationImageView.visibleProperty().set(true);
+                waitPane.visibleProperty().set(false);
+
             });
 
         });
