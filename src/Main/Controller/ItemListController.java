@@ -242,7 +242,7 @@ public class ItemListController {
 
         spinnerImage.visibleProperty().set(true);
         decorationImageView.visibleProperty().set(false);
-        waitPane.visibleProperty().set(true);
+       // waitPane.visibleProperty().set(true);
         mainApp.solve(terminalBuffer);
 
         executor.submit(() -> {
@@ -257,7 +257,7 @@ public class ItemListController {
             Platform.runLater(() -> {
                 spinnerImage.visibleProperty().set(false);
                 decorationImageView.visibleProperty().set(true);
-                waitPane.visibleProperty().set(false);
+             //   waitPane.visibleProperty().set(false);
 
             });
 
