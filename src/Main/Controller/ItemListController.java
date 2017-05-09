@@ -317,13 +317,25 @@ public class ItemListController {
 
                 //first line capacity and Length
                 String first = br.readLine();
-                mainApp.getCapacity().set(first.split(" ")[0]);
-                for (int i = 0; i < Integer.valueOf(first.split(" ")[1]); i++) {
-                    String itemString = br.readLine();
-                    int weight = Integer.valueOf(itemString.split(" ")[0]);
-                    int value = Integer.valueOf(itemString.split(" ")[1]);
-                    mainApp.getItems().add(new ItemFX(weight, value));
+                if (first.matches("[0-9]+ [0-9]+")) {
+                    mainApp.getCapacity().set(first.split(" ")[0]);
+                    for (int i = 0; i < Integer.valueOf(first.split(" ")[1]); i++) {
+                        String itemString = br.readLine();
+                        if (itemString.matches("[0-9]+ [0-9]+")) {
+                            int weight = Integer.valueOf(itemString.split(" ")[0]);
+                            int value = Integer.valueOf(itemString.split(" ")[1]);
+                            mainApp.getItems().add(new ItemFX(weight, value));
+                        } else {
+                            terminalBuffer.set("Format-Fehler!");
+                            mainApp.getItems().clear();
+                            return;
+                        }
+
+                    }
+                } else {
+                    terminalBuffer.set("Format-Fehler!");
                 }
+
 
 
             } catch (IOException e) {
