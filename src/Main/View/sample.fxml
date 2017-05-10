@@ -12,7 +12,7 @@
    <children>
        <Separator layoutX="15.0" layoutY="448.0" prefHeight="3.0" prefWidth="226.0" />
        <TextField fx:id="capacityField" layoutX="141.0" layoutY="41.0" prefHeight="25.0" prefWidth="81.0"/>
-       <Label layoutX="834.0" layoutY="44.0" text="Solver:"/>
+       <Label layoutX="834.0" layoutY="44.0" text="main.Solver:"/>
        <ListView fx:id="solverList" focusTraversable="false" layoutX="834.0" layoutY="65.0" prefHeight="190.0"
                  prefWidth="182.0"/>
        <Button layoutX="834.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleLoadSolver" prefHeight="25.0"

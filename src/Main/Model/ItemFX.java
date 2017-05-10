@@ -6,41 +6,40 @@ import javafx.beans.property.SimpleIntegerProperty;
  * Created by james on 06.05.2017.
  */
 public class ItemFX {
-    public int getWeight() {
-        return weight.get();
+    private final IntegerProperty weight;
+    private final IntegerProperty value;
+
+    public ItemFX(int weight, int value) {
+        this.weight = new SimpleIntegerProperty(weight);
+        this.value = new SimpleIntegerProperty(value);
+
     }
 
-    public IntegerProperty weightProperty() {
-        return weight;
+    public int getWeight() {
+        return weight.get();
     }
 
     public void setWeight(int weight) {
         this.weight.set(weight);
     }
 
-    public int getValue() {
-        return value.get();
+    public IntegerProperty weightProperty() {
+        return weight;
     }
 
-    public IntegerProperty valueProperty() {
-        return value;
+    public int getValue() {
+        return value.get();
     }
 
     public void setValue(int value) {
         this.value.set(value);
     }
 
-    private final IntegerProperty weight;
-    private final IntegerProperty value;
-
-
-    public ItemFX(int weight, int value){
-        this.weight = new SimpleIntegerProperty(weight);
-        this.value = new SimpleIntegerProperty(value);
-
+    public IntegerProperty valueProperty() {
+        return value;
     }
 
     public String toString(){
-        return "Gewicht: " + getWeight() + "kg, Wert: " + getValue() + "€";
+        return "Gewicht: " + getWeight() + "kg, \t Wert: " + getValue() + "€";
     }
 }

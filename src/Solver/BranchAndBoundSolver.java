@@ -122,7 +122,7 @@ public class BranchAndBoundSolver extends ASolver {
                 if (w + item.getWeight() > capacity) continue;
                 w += item.getWeight();
                 bound += item.getValue();
-                //bound += (capacity - w) * item.getRatio();
+                bound += (capacity - w) * item.getRatio();
             }
 
 

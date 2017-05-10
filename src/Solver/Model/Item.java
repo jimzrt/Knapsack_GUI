@@ -30,7 +30,7 @@ public class Item {
 
 
     public String toString(){
-        return "Gewicht: " + weight + "kg, Wert: " + value + "€";
+        return "[Gewicht: " + weight + "kg, Wert: " + value + "€]";
     }
 
 }

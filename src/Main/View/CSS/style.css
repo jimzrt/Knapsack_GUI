@@ -6,8 +6,9 @@
 
 .text-area.terminal {
 -fx-text-fill: white;
-     -fx-font-family: "Roboto Mono";
-    -fx-font-size: 12px;
+     -fx-font-family: "Ubuntu Mono";
+      -fx-font-smoothing-type: gray;
+    -fx-font-size: 14px;
 }
 
 .text-area.terminal .content {

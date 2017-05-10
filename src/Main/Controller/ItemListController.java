@@ -4,11 +4,15 @@ import Main.MainApp;
 import Main.Model.ItemFX;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -63,15 +67,20 @@ public class ItemListController {
         this.capacityField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.matches("[0-9]+")){
                 mainApp.getCapacity().set(newValue);
+            } else {
+                capacityField.textProperty().set(oldValue);
             }
         });
 
         terminalBuffer.addListener((observable, oldValue, newValue) -> {
             if (newValue != "") {
                 terminal.appendText(newValue + "\n");
-            } else {
+
+
                 terminalBuffer.setValue("");
             }
+            terminal.setScrollTop(Double.MAX_VALUE);
+
 
         });
 
@@ -115,12 +124,12 @@ public class ItemListController {
             }
         });
 
-        spinnerImage.setImage(new Image("/Main/View/Images/spinner.gif"));
+        spinnerImage.setImage(new Image("//Main/View/Images/spinner.gif"));
         spinnerImage.setFitHeight(120);
         spinnerImage.setFitWidth(120);
         spinnerImage.setPreserveRatio(true);
 
-        decorationImageView.setImage(new Image("/Main/View/Images/knap.png"));
+        decorationImageView.setImage(new Image("//Main/View/Images/knap.png"));
         decorationImageView.setFitHeight(180);
         decorationImageView.setFitWidth(180);
         decorationImageView.setPreserveRatio(true);
@@ -148,7 +157,19 @@ public class ItemListController {
         terminalBuffer.set("\nBeschreibung:\n----------------");
         terminalBuffer.set("Das Rucksackproblem ist ein Optimierungsproblem der Kombinatorik. Aus einer Menge von Objekten, die jeweils ein Gewicht und einen Nutzwert haben, soll eine Teilmenge ausgewählt werden, deren Gesamtgewicht eine vorgegebene Gewichtsschranke nicht überschreitet. Unter dieser Bedingung soll der Nutzwert der ausgewählten Objekte maximiert werden.");
         terminalBuffer.set("\n\nBenutzung:\n----------------");
-        terminalBuffer.set("");
+        terminalBuffer.set("In der linken Spalte kann man das Maximalgewicht definieren und einzeln Gegenstände hinzufügen.");
+        terminalBuffer.set("Alternativ kann man über die Menüleiste Zufallsgegenstände generieren und hinzufügen, oder eine Textdatei importieren, in der das Maximalgewicht und Gegenstände definiert sind.");
+        terminalBuffer.set("Zudem hat man die Möglichkeit die aktuelle Liste von Gegenständen und das Maxmialgewicht zu exportieren.\n");
+
+        terminalBuffer.set("In der rechten Spalte kann man den Solver auswählen, der für die Berechnung und Gegenstands-Selektion zuständig ist.");
+        terminalBuffer.set("Fur jeden Solven kann man eine Beschreibung ausgeben lassen, die ihn näher erläutert, daher nur auf die Problemgröße (Maximalgewicht und Anzahl der Gegenstände) bezogen:\n");
+        terminalBuffer.set("GreedySolver: Eignet sich für Probleme jeglicher Größe wegen polynomialer\n\tLaufzeit und führt zu einem guten Ergbnis, das aber von der optimalen\n\tLösung abweichen kann.");
+        terminalBuffer.set("BruteForceSolver: Eignet sich für kleinere Probleme wegen exponentiellem\n\tLaufzeitverhalten und führt zu einem korrekten Ergebnis.");
+        terminalBuffer.set("BranchAndBoundSolver: Eignet sich für kleinere bis mittelgroße Probleme, weil\n\tes im Worst-case auch z uexponentiellem Laufzeitverhalten kommt\n\tund führt zu einem korrekten Ergebnis.");
+        terminalBuffer.set("DynamicSolver: Eignet sich für große Probleme wegen pseudo-polynomialer\n\tLaufzeit und führt zu einem korrekten Ergbnis.");
+        terminalBuffer.set("DynamicSolverOpt: Eine Speicher-optimierte Version des DynamicSolver, der mit\n\tnoch größeren Problemen umgehen kann, jedoch keine Gegenstände\n\tauswählt, sondern nur den maxmial möglichen Wert berechnet.\n\n");
+
+
     }
 
 
@@ -163,16 +184,25 @@ public class ItemListController {
             weightField.setText("");
             valueField.setText("");
         }else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
-
-            alert.showAndWait();
+            terminalBuffer.set("Nur ganze Zahlen für Gewicht und Wert!");
         }
 
     }
+
+    @FXML
+    private void handleNewInstance() {
+
+        mainApp.createNewInstance();
+
+    }
+
+    @FXML
+    private void handleClose() {
+
+        mainApp.exit();
+
+    }
+
 
 
     @FXML
@@ -181,13 +211,7 @@ public class ItemListController {
         if(selectedIndex != -1){
             itemList.getItems().remove(selectedIndex);
         }else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApp.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selected");
-            alert.setContentText("Please select a person in the table.");
-
-            alert.showAndWait();
+            terminalBuffer.set("Kein Gegenstand ausgewählt!");
         }
     }
 
@@ -212,9 +236,12 @@ public class ItemListController {
                     bw.newLine();
                 }
 
+                terminalBuffer.set("Gespeichert!");
+
             } catch (IOException e) {
 
-                e.printStackTrace();
+                terminalBuffer.set("Error:");
+                terminalBuffer.set(e.getMessage());
 
             }
 
@@ -232,6 +259,8 @@ public class ItemListController {
                 mainApp.loadSolver(className, terminalBuffer);
                 solverList.refresh();
             }
+        } else {
+            terminalBuffer.set("Kein Solver ausgewählt!");
         }
 
 
@@ -239,6 +268,11 @@ public class ItemListController {
 
     @FXML
     public void handleSolve() {
+
+        if (mainApp.getItems().isEmpty()) {
+            terminalBuffer.set("Keine Gegenstände!");
+            return;
+        }
 
         spinnerImage.visibleProperty().set(true);
         decorationImageView.visibleProperty().set(false);
@@ -272,12 +306,12 @@ public class ItemListController {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(mainApp.getClass().getResource("/Main/View/RandomItemsDialog.fxml"));
+            loader.setLocation(mainApp.getClass().getResource("//Main/View/RandomItemsDialog.fxml"));
             Pane page = (Pane) loader.load();
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Zufall");
+            dialogStage.setTitle("Gegenstände generieren...");
             dialogStage.setResizable(false);
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(mainApp.getPrimaryStage());
@@ -304,6 +338,7 @@ public class ItemListController {
     @FXML
     public void handleFileImport() {
 
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Knapsack Problem");
         fileChooser.getExtensionFilters().addAll(
@@ -326,14 +361,16 @@ public class ItemListController {
                             int value = Integer.valueOf(itemString.split(" ")[1]);
                             mainApp.getItems().add(new ItemFX(weight, value));
                         } else {
-                            terminalBuffer.set("Format-Fehler!");
+                            terminalBuffer.set("Format-Error: " + itemString);
                             mainApp.getItems().clear();
                             return;
                         }
 
                     }
+
+                    terminalBuffer.set(first.split(" ")[1] + " Gegenstände geladen - Maximalgewicht " + first.split(" ")[0] + "kg");
                 } else {
-                    terminalBuffer.set("Format-Fehler!");
+                    terminalBuffer.set("Format-Error: " + first);
                 }
 
 
@@ -349,15 +386,38 @@ public class ItemListController {
 
 
     }
+
+    @FXML
+    public void handleGetDescription() {
+
+
+        if (mainApp.getCurrentSolver() != null) {
+            terminalBuffer.set(mainApp.getCurrentSolver().getDescription());
+        } else {
+            terminalBuffer.set("Kein Solver ausgewählt!");
+        }
+
+
+    }
+
+    @FXML
+    public void handleClearItems() {
+        mainApp.getItems().clear();
+        terminalBuffer.set("Gegenstände geleert!");
+    }
+
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
         itemList.setItems(mainApp.getItems());
 
-        solverList.setItems(mainApp.getSolvers());
+        solverList.setItems(FXCollections.observableArrayList(MainApp.SOLVER_CLASS_NAMES));
 
         capacityField.textProperty().bindBidirectional(mainApp.getCapacity());
+
+        terminal.setScrollTop(Double.MIN_VALUE);
+
 
     }
 

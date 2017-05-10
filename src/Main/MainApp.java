@@ -25,6 +25,10 @@ import java.util.concurrent.ThreadFactory;
 
 public class MainApp extends Application {
 
+    public static String[] SOLVER_CLASS_NAMES = new String[]{"GreedySolver", "BruteForceSolver", "BranchAndBoundSolver", "DynamicSolver", "DynamicSolverOpt"};
+
+
+
     public SimpleStringProperty capacity = new SimpleStringProperty();
     boolean computing = false;
     ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
@@ -56,8 +60,7 @@ public class MainApp extends Application {
         capacity.set("15");
 
 
-
-        solvers = getSolversByClassName();
+        //solvers = getSolversByClassName();
 
 
         // ISolver solver = new DynamicSolver();
@@ -80,21 +83,24 @@ public class MainApp extends Application {
 
         // System.out.println(terminalBuffer.get());
         if (currentSolver instanceof ASolver) {
-            terminalBuffer.setValue("Berechne " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
+            terminalBuffer.setValue("_______________________\n");
 
-            //TODO:Validation
+            terminalBuffer.setValue("Berechne " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
 
 
             computing = true;
 
             executor.submit(() -> {
+
+                long time = System.currentTimeMillis();
                 currentSolver.setCapacity(Integer.valueOf(capacity.get()));
                 currentSolver.setItems(Converter.ItemsFXToItems(items));
                 currentSolver.solve();
                 computing = false;
                 Platform.runLater(() -> {
-                    terminalBuffer.setValue("Maximaler Wert: " + currentSolver.getMaxValueSum());
-                    terminalBuffer.setValue("Gewicht: " + currentSolver.getTotalWeight());
+                    terminalBuffer.setValue("Rechenzeit: " + (System.currentTimeMillis() - time) + "ms");
+                    terminalBuffer.setValue("Maximaler Wert: " + currentSolver.getMaxValueSum() + "€");
+                    terminalBuffer.setValue("Gewicht: " + currentSolver.getTotalWeight() + "kg\n");
                     terminalBuffer.setValue("Ausgewählte Gegenstände: ");
 
                     int paddingZeros = (int) Math.log10(currentSolver.getItemSelection().size());
@@ -133,9 +139,9 @@ public class MainApp extends Application {
         return items;
     }
 
-    public ObservableList<String> getSolvers() {
-        return solvers;
-    }
+    // public String[] getSolvers() {
+    //    return solvers;
+    //}
 
     ;
 
@@ -151,11 +157,12 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Font robo = Font.loadFont(getClass().getResource("/Main/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
-        Font robomono = Font.loadFont(getClass().getResource("/Main/View/Fonts/RobotoMono-Regular.ttf").toExternalForm(), 12);
+        //System.setProperty("prism.lcdtext", "false");
+        // System.setProperty("prism.text", "t2k");
+        Font.loadFont(getClass().getResource("/Main/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
+        Font.loadFont(getClass().getResource("/Main/View/Fonts/UbuntuMono-R.ttf").toExternalForm(), 12);
 
-        System.out.println(robo.getFamily());
-        System.out.println(robomono.getFamily());
+
 
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Rucksackproblem - Löser");
@@ -175,14 +182,14 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Main/View/sample.fxml"));
+            loader.setLocation(getClass().getResource("//Main/View/MainGui.fxml"));
             rootLayout = (Pane) loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
 
 
-            String css = getClass().getResource("/Main/View/CSS/style.css").toExternalForm();
+            String css = getClass().getResource("//Main/View/CSS/style.css").toExternalForm();
             scene.getStylesheets().add(css);
 
             primaryStage.setScene(scene);
@@ -212,23 +219,7 @@ public class MainApp extends Application {
         return computing;
     }
 
-    private ObservableList<String> getSolversByClassName() {
-       // List<String> solvers = new ArrayList<String>();
-        String[] solverClassNames = new String[]{"DynamicSolver", "DynamicSolverOpt", "BruteForceSolver", "GreedySolver",  "BranchAndBoundSolver"};
 
-//        for(String solverName : solverClassNames) {
-//
-//            solvers.add(solverName);
-//
-//        }
-
-
-//
-//        }
-
-
-        return FXCollections.observableArrayList(solverClassNames);
-    }
 
     public void loadSolver(String className, SimpleStringProperty terminalBuffer) {
         Class<?> clazz = null;
@@ -256,5 +247,18 @@ public class MainApp extends Application {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void createNewInstance() {
+        Platform.runLater(() -> {
+            new MainApp().start(new Stage());
+
+        });
+    }
+
+    public void exit() {
+        Platform.exit();
+        System.exit(0);
     }
 }
