@@ -182,14 +182,14 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("//Main/View/MainGui.fxml"));
+            loader.setLocation(getClass().getResource("/Main/View/MainGui.fxml"));
             rootLayout = (Pane) loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
 
 
-            String css = getClass().getResource("//Main/View/CSS/style.css").toExternalForm();
+            String css = getClass().getResource("/Main/View/CSS/style.css").toExternalForm();
             scene.getStylesheets().add(css);
 
             primaryStage.setScene(scene);

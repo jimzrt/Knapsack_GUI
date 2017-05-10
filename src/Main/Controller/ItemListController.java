@@ -124,12 +124,12 @@ public class ItemListController {
             }
         });
 
-        spinnerImage.setImage(new Image("//Main/View/Images/spinner.gif"));
+        spinnerImage.setImage(new Image("/Main/View/Images/spinner.gif"));
         spinnerImage.setFitHeight(120);
         spinnerImage.setFitWidth(120);
         spinnerImage.setPreserveRatio(true);
 
-        decorationImageView.setImage(new Image("//Main/View/Images/knap.png"));
+        decorationImageView.setImage(new Image("/Main/View/Images/knap.png"));
         decorationImageView.setFitHeight(180);
         decorationImageView.setFitWidth(180);
         decorationImageView.setPreserveRatio(true);
@@ -306,7 +306,7 @@ public class ItemListController {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(mainApp.getClass().getResource("//Main/View/RandomItemsDialog.fxml"));
+            loader.setLocation(mainApp.getClass().getResource("/Main/View/RandomItemsDialog.fxml"));
             Pane page = (Pane) loader.load();
 
             // Create the dialog Stage.
