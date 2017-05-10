@@ -1,6 +1,6 @@
-package Main.Util;
+package GUI.Util;
 
-import Main.Model.ItemFX;
+import GUI.Model.ItemFX;
 import Solver.Model.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

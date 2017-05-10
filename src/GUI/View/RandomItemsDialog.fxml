@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity" prefHeight="243.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/8.0.111"
-      fx:controller="Main.Controller.RandomItemsDialogController">
+      fx:controller="GUI.Controller.RandomItemsDialogController">
     <children>
         <Label layoutX="15.0" layoutY="18.0" text="Anzahl"/>
         <TextField fx:id="anzahlField" layoutX="102.0" layoutY="14.0"/>

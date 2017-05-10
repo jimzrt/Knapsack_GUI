@@ -1,8 +1,8 @@
-package Main;
+package GUI;
 
-import Main.Controller.ItemListController;
-import Main.Model.ItemFX;
-import Main.Util.Converter;
+import GUI.Controller.ItemListController;
+import GUI.Model.ItemFX;
+import GUI.Util.Converter;
 import Solver.ASolver;
 import Solver.Model.Item;
 import javafx.application.Application;
@@ -159,8 +159,8 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         //System.setProperty("prism.lcdtext", "false");
         // System.setProperty("prism.text", "t2k");
-        Font.loadFont(getClass().getResource("/Main/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
-        Font.loadFont(getClass().getResource("/Main/View/Fonts/UbuntuMono-R.ttf").toExternalForm(), 12);
+        Font.loadFont(getClass().getResource("/GUI/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
+        Font.loadFont(getClass().getResource("/GUI/View/Fonts/UbuntuMono-R.ttf").toExternalForm(), 12);
 
 
 
@@ -182,14 +182,14 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Main/View/MainGui.fxml"));
+            loader.setLocation(getClass().getResource("/GUI/View/MainGui.fxml"));
             rootLayout = (Pane) loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
 
 
-            String css = getClass().getResource("/Main/View/CSS/style.css").toExternalForm();
+            String css = getClass().getResource("/GUI/View/CSS/style.css").toExternalForm();
             scene.getStylesheets().add(css);
 
             primaryStage.setScene(scene);

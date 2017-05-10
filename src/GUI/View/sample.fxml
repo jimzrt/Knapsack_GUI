@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity" prefHeight="623.0" prefWidth="1028.0" styleClass="background"
-      xmlns="http://javafx.com/javafx/8.0.111" fx:controller="Main.Controller.ItemListController">
+      xmlns="http://javafx.com/javafx/8.0.111" fx:controller="GUI.Controller.ItemListController">
    <children>
        <Separator layoutX="15.0" layoutY="448.0" prefHeight="3.0" prefWidth="226.0" />
        <TextField fx:id="capacityField" layoutX="141.0" layoutY="41.0" prefHeight="25.0" prefWidth="81.0"/>

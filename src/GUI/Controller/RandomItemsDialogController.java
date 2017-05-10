@@ -1,6 +1,6 @@
-package Main.Controller;
+package GUI.Controller;
 
-import Main.Model.ItemFX;
+import GUI.Model.ItemFX;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

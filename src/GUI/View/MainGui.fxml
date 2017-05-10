@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="633.0" prefWidth="1128.0" xmlns="http://javafx.com/javafx/8.0.111"
-      fx:controller="Main.Controller.ItemListController">
+      fx:controller="GUI.Controller.ItemListController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -87,7 +87,7 @@
                 <AnchorPane maxHeight="585.0" maxWidth="200.0" minHeight="585.0" minWidth="200.0" prefHeight="585.0"
                             prefWidth="200.0">
                     <children>
-                        <Label layoutX="14.0" layoutY="18.0" text="main.Solver:"/>
+                        <Label layoutX="14.0" layoutY="18.0" text="Solver:"/>
                         <ListView fx:id="solverList" focusTraversable="false" layoutX="10.0" layoutY="35.0"
                                   prefHeight="190.0" prefWidth="182.0"/>
                         <Button layoutX="10.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleLoadSolver"
