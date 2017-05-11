@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="623.0" prefWidth="1028.0" styleClass="background"
+      xmlns="http://javafx.com/javafx/8.0.111" fx:controller="GUI.Controller.ItemListController">
+    <children>
+        <Separator layoutX="15.0" layoutY="448.0" prefHeight="3.0" prefWidth="226.0"/>
+        <TextField fx:id="capacityField" layoutX="141.0" layoutY="41.0" prefHeight="25.0" prefWidth="81.0"/>
+        <Label layoutX="834.0" layoutY="44.0" text="main.Solver:"/>
+        <ListView fx:id="solverList" focusTraversable="false" layoutX="834.0" layoutY="65.0" prefHeight="190.0"
+                  prefWidth="182.0"/>
+        <Button layoutX="834.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleLoadSolver" prefHeight="25.0"
+                prefWidth="182.0" text="Lade"/>
+        <Button id="dark-blue" layoutX="838.0" layoutY="556.0" mnemonicParsing="false" onAction="#handleSolve"
+                prefHeight="50.0" prefWidth="172.0" text="Berechne...">
+            <font>
+                <Font size="23.0"/>
+            </font>
+        </Button>
+        <Separator layoutX="15.0" layoutY="75.0" prefHeight="3.0" prefWidth="226.0"/>
+        <MenuBar prefHeight="25.0" prefWidth="1028.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="Import">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleRandomDialog" text="Zufall..."/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleFileImport" text="Datei..."/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Export">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Datei..."/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Hilfe">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Button layoutX="15.0" layoutY="413.0" mnemonicParsing="false" onAction="#handleDeleteItem" prefHeight="25.0"
+                prefWidth="226.0" text="Markiertes Element entfernen"/>
+        <TitledPane animated="false" layoutX="15.0" layoutY="458.0" prefHeight="149.0" prefWidth="226.0"
+                    text="Gegenstand hinzufügen">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="224.0" styleClass="background">
+                    <children>
+                        <Label layoutX="9.0" layoutY="24.0" text="Gewicht:"/>
+                        <Label layoutX="9.0" layoutY="65.0" text="Wert:"/>
+                        <TextField fx:id="weightField" layoutX="100.0" layoutY="20.0" prefHeight="25.0"
+                                   prefWidth="89.0"/>
+                        <TextField fx:id="valueField" layoutX="100.0" layoutY="61.0" prefHeight="25.0"
+                                   prefWidth="89.0"/>
+                        <Button layoutX="-1.0" layoutY="96.0" mnemonicParsing="false" onAction="#handleAddItem"
+                                prefHeight="25.0" prefWidth="226.0" text="Hinzufügen"/>
+                        <Label layoutX="196.0" layoutY="26.0" text="kg"/>
+                        <Label layoutX="196.0" layoutY="65.0" text="€"/>
+                    </children>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+        <Label layoutX="15.0" layoutY="86.0" text="Gegenstände:"/>
+        <Label layoutX="15.0" layoutY="45.0" text="Maximalgewicht:"/>
+        <ImageView fx:id="decorationImageView" fitHeight="181.0" fitWidth="182.0" layoutX="803.0" layoutY="368.0"
+                   pickOnBounds="true" preserveRatio="true"/>
+        <ImageView fx:id="spinnerImage" fitHeight="120.0" fitWidth="120.0" layoutX="834.0" layoutY="413.0"
+                   pickOnBounds="true" smooth="false" visible="false"/>
+        <Label layoutX="227.0" layoutY="45.0" text="kg"/>
+        <Pane fx:id="waitPane" layoutY="-2.0" prefHeight="630.0" prefWidth="950.0" visible="false"/>
+        <TextArea fx:id="terminal" editable="false" focusTraversable="false" layoutX="253.0" layoutY="41.0"
+                  prefHeight="567.0" prefWidth="572.0" styleClass="terminal" wrapText="true">
+            <font>
+                <Font name="Liberation Mono" size="12.0"/>
+            </font>
+            <cursor>
+                <Cursor fx:constant="DEFAULT"/>
+            </cursor>
+        </TextArea>
+        <ListView fx:id="itemList" focusTraversable="false" layoutX="15.0" layoutY="105.0" prefHeight="310.0"
+                  prefWidth="226.0"/>
+    </children>
+</Pane>
