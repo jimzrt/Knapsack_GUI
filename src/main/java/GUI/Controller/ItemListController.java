@@ -2,6 +2,8 @@ package GUI.Controller;
 
 import GUI.MainApp;
 import GUI.Model.ItemFX;
+import GUI.Util.NameGenerator;
+import GUI.Util.Validator;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -50,6 +52,8 @@ public class ItemListController {
     @FXML
     private ListView<String> solverList;
     @FXML
+    private TextField nameField;
+    @FXML
     private TextField weightField;
     @FXML
     private TextField valueField;
@@ -62,6 +66,12 @@ public class ItemListController {
 
     @FXML
     private void initialize() {
+
+
+        Validator.createSimpleNumberValidator(capacityField);
+        Validator.createSimpleNumberValidator(weightField);
+        Validator.createSimpleNumberValidator(valueField);
+
 
 
         this.capacityField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -174,9 +184,15 @@ public class ItemListController {
     @FXML
     private void handleAddItem() {
         if (weightField.getText().matches("[0-9]+") && valueField.getText().matches("[0-9]+")) {
+            String name = nameField.getText().trim();
+            if (name.length() > 35) {
+                name = name.substring(0, 35);
+            } else if (name.equals("")) {
+                name = NameGenerator.getRandomName();
+            }
             int weight = Integer.valueOf(weightField.getText());
             int value = Integer.valueOf(valueField.getText());
-            ItemFX newItem = new ItemFX(weight, value);
+            ItemFX newItem = new ItemFX(name, weight, value);
             mainApp.getItems().add(newItem);
             //FXCollections.sort(mainApp.getItems(),Comparator.comparingInt(ItemFX::getWeight));
             weightField.setText("");
@@ -354,9 +370,10 @@ public class ItemListController {
                     for (int i = 0; i < Integer.valueOf(first.split(" ")[1]); i++) {
                         String itemString = br.readLine();
                         if (itemString.matches("[0-9]+ [0-9]+")) {
-                            int weight = Integer.valueOf(itemString.split(" ")[0]);
-                            int value = Integer.valueOf(itemString.split(" ")[1]);
-                            mainApp.getItems().add(new ItemFX(weight, value));
+                            String name = itemString.split(" ")[0];
+                            int weight = Integer.valueOf(itemString.split(" ")[1]);
+                            int value = Integer.valueOf(itemString.split(" ")[2]);
+                            mainApp.getItems().add(new ItemFX(name, weight, value));
                         } else {
                             terminalBuffer.set("Format-Error: " + itemString);
                             mainApp.getItems().clear();

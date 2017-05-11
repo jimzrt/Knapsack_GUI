@@ -102,24 +102,28 @@ public class MainApp extends Application {
                     terminalBuffer.setValue("Rechenzeit: " + (System.currentTimeMillis() - time) + "ms");
                     terminalBuffer.setValue("Maximaler Wert: " + currentSolver.getMaxValueSum() + "€");
                     terminalBuffer.setValue("Gewicht: " + currentSolver.getTotalWeight() + "kg\n");
-                    terminalBuffer.setValue("Ausgewählte Gegenstände: ");
+                    terminalBuffer.setValue(currentSolver.getItemSelection().size() + " Ausgewählte Gegenstände: ");
 
-                    int paddingZeros = (int) Math.log10(currentSolver.getItemSelection().size());
+                    if (currentSolver.getItemSelection().size() > 0) {
+
 
                     int index = 1;
-                    String zeros;
+                        StringBuilder itemListString = new StringBuilder();
+                        itemListString.append(String.format("+%78s+\n", " ").replaceAll(" ", "-"));
+                        itemListString.append(String.format("| %-10s| %-40s| %-10s| %-10s |\n", "Nummer", "Name", "Gewicht", "Wert"));
+                        itemListString.append(String.format("+ %-10s+ %-40s+ %-10s+ %-10s +\n", " ", " ", " ", " ").replaceAll(" ", "-"));
+
                     for (Item item : currentSolver.getItemSelection()) {
-                        if (paddingZeros > 0) {
-                            zeros = String.format("%0" + (paddingZeros + 1) + "d", index);
-                        } else {
-                            zeros = "" + index;
-                        }
-                        terminalBuffer.set("Gegenstand " + zeros + ": \t " + item.toString());
+
+                        itemListString.append(String.format("| %-10s| %-40s| %-10s| %-10s |\n", index, item.getName(), item.getWeight() + "kg", item.getValue() + "€"));
+                        itemListString.append(String.format("+ %-10s+ %-40s+ %-10s+ %-10s +\n", " ", " ", " ", " ").replaceAll(" ", "-"));
+                        //itemListString.append(String.format("+%68s+\n", " ").replaceAll(" ", "-"));
                         index++;
                     }
-                    terminalBuffer.setValue("_______________________\n");
+                        terminalBuffer.set(itemListString.toString());
+                        //terminalBuffer.setValue("_______________________\n");
 
-
+                    }
                 });
 
             });

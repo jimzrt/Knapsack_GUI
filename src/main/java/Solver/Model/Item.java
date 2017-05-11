@@ -3,11 +3,13 @@ package Solver.Model;
 
 public class Item {
 
+    private String name;
     private int weight;
     private int value;
 
 
-    public Item(int weight, int value) {
+    public Item(String name, int weight, int value) {
+        this.name = name;
         this.weight = weight;
         this.value = value;
     }
@@ -34,7 +36,14 @@ public class Item {
 
 
     public String toString() {
-        return "[Gewicht: " + weight + "kg, Wert: " + value + "€]";
+        return "[" + name + "\t Gewicht: " + weight + "kg \t Wert: " + value + "€]";
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

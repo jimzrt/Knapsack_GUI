@@ -1,6 +1,8 @@
 package GUI.Controller;
 
 import GUI.Model.ItemFX;
+import GUI.Util.NameGenerator;
+import GUI.Util.Validator;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,17 +34,9 @@ public class RandomItemsDialogController {
     private SimpleIntegerProperty anzahl = new SimpleIntegerProperty(10);
 
 
-    public void createSimpleNumberValidator(TextField field) {
 
-        field.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[0-9]+")) {
-                field.textProperty().set(oldValue);
-            }
-        });
 
-    }
 
-    ;
 
     @FXML
     private void initialize() {
@@ -50,13 +44,13 @@ public class RandomItemsDialogController {
         //initial values
         anzahlField.setText("" + anzahl.get());
         weightMinField.setText("5");
-        createSimpleNumberValidator(weightMinField);
+        Validator.createSimpleNumberValidator(weightMinField);
         weightMaxField.setText("50");
-        createSimpleNumberValidator(weightMaxField);
+        Validator.createSimpleNumberValidator(weightMaxField);
         valueMinField.setText("5");
-        createSimpleNumberValidator(valueMinField);
+        Validator.createSimpleNumberValidator(valueMinField);
         valueMaxField.setText("50");
-        createSimpleNumberValidator(valueMaxField);
+        Validator.createSimpleNumberValidator(valueMaxField);
 
 
         anzahl.addListener((observable, oldValue, newValue) -> {
@@ -92,13 +86,15 @@ public class RandomItemsDialogController {
 
         Random random = new Random();
         for (int i = 0; i < Integer.valueOf(anzahlField.getText()); i++) {
+            String name = NameGenerator.getRandomName();
+
             int minWeight = Integer.valueOf(weightMinField.getText());
             int maxWeight = Integer.valueOf(weightMaxField.getText());
 
             int minValue = Integer.valueOf(valueMinField.getText());
             int maxValue = Integer.valueOf(valueMaxField.getText());
 
-            this.itemList.add(new ItemFX(random.nextInt(maxWeight) + minWeight, random.nextInt(maxValue) + minValue));
+            this.itemList.add(new ItemFX(name, random.nextInt(maxWeight) + minWeight, random.nextInt(maxValue) + minValue));
 
         }
 

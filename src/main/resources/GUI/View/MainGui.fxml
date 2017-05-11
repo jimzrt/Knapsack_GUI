@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="633.0" prefWidth="1128.0" xmlns="http://javafx.com/javafx/8.0.111"
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="669.0" prefWidth="1128.0" xmlns="http://javafx.com/javafx/8.0.111"
       fx:controller="GUI.Controller.ItemListController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
@@ -38,27 +38,30 @@
         <SplitPane dividerPositions="0.2211367673179396, 0.8214920071047958" focusTraversable="false" prefHeight="-1.0"
                    prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <items>
-                <AnchorPane maxHeight="585.0" maxWidth="250.0" minHeight="585.0" minWidth="250.0" prefHeight="585.0"
+                <AnchorPane maxHeight="637.0" maxWidth="250.0" minHeight="585.0" minWidth="250.0" prefHeight="637.0"
                             prefWidth="250.0">
                     <children>
                         <Separator layoutX="14.0" layoutY="413.0" prefHeight="3.0" prefWidth="226.0"/>
-                        <TitledPane animated="false" layoutX="14.0" layoutY="423.0" prefHeight="149.0" prefWidth="226.0"
+                        <TitledPane animated="false" layoutX="14.0" layoutY="425.0" prefHeight="181.0" prefWidth="226.0"
                                     text="Gegenstand hinzufügen">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="224.0"
-                                            styleClass="background">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="127.0" prefWidth="224.0"
+                                            scaleShape="false" styleClass="background">
                                     <children>
-                                        <Label layoutX="9.0" layoutY="24.0" text="Gewicht:"/>
-                                        <Label layoutX="9.0" layoutY="65.0" text="Wert:"/>
-                                        <TextField fx:id="weightField" layoutX="100.0" layoutY="20.0" prefHeight="25.0"
-                                                   prefWidth="89.0"/>
-                                        <TextField fx:id="valueField" layoutX="100.0" layoutY="61.0" prefHeight="25.0"
-                                                   prefWidth="89.0"/>
-                                        <Button layoutX="-1.0" layoutY="96.0" mnemonicParsing="false"
+                                        <Label layoutX="12.0" layoutY="49.0" text="Gewicht:"/>
+                                        <Label layoutX="15.0" layoutY="82.0" text="Wert:"/>
+                                        <TextField fx:id="weightField" layoutX="98.0" layoutY="45.0" prefHeight="25.0"
+                                                   prefWidth="94.0"/>
+                                        <TextField fx:id="valueField" layoutX="98.0" layoutY="78.0" prefHeight="25.0"
+                                                   prefWidth="94.0"/>
+                                        <Button layoutX="-1.0" layoutY="116.0" mnemonicParsing="false"
                                                 onAction="#handleAddItem" prefHeight="25.0" prefWidth="226.0"
                                                 text="Hinzufügen"/>
-                                        <Label layoutX="196.0" layoutY="26.0" text="kg"/>
-                                        <Label layoutX="196.0" layoutY="65.0" text="€"/>
+                                        <Label layoutX="199.0" layoutY="51.0" text="kg"/>
+                                        <Label layoutX="202.0" layoutY="82.0" text="€"/>
+                                        <Label layoutX="12.0" layoutY="18.0" text="Name:"/>
+                                        <TextField fx:id="nameField" layoutX="98.0" layoutY="14.0" prefHeight="25.0"
+                                                   prefWidth="120.0"/>
                                     </children>
                                 </AnchorPane>
                             </content>

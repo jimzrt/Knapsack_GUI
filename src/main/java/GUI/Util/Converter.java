@@ -16,10 +16,10 @@ import static java.util.stream.Collectors.toCollection;
 public class Converter {
 
     public static List<Item> ItemsFXToItems(ObservableList<ItemFX> itemsFX) {
-        return itemsFX.stream().map(obj -> new Item(obj.getWeight(), obj.getValue())).collect(Collectors.toList());
+        return itemsFX.stream().map(obj -> new Item(obj.getName(), obj.getWeight(), obj.getValue())).collect(Collectors.toList());
     }
 
     public static ObservableList<ItemFX> ItemsToItemsFX(List<Item> items) {
-        return items.stream().map(obj -> new ItemFX(obj.getWeight(), obj.getValue())).collect(toCollection(FXCollections::observableArrayList));
+        return items.stream().map(obj -> new ItemFX(obj.getName(), obj.getWeight(), obj.getValue())).collect(toCollection(FXCollections::observableArrayList));
     }
 }
