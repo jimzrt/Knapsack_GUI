@@ -94,7 +94,7 @@ public class RandomItemsDialogController {
             int minValue = Integer.valueOf(valueMinField.getText());
             int maxValue = Integer.valueOf(valueMaxField.getText());
 
-            this.itemList.add(new ItemFX(name, random.nextInt(maxWeight) + minWeight, random.nextInt(maxValue) + minValue));
+            this.itemList.add(new ItemFX(name, random.nextInt(maxWeight - minWeight) + minWeight, random.nextInt(maxValue - minValue) + minValue));
 
         }
 
