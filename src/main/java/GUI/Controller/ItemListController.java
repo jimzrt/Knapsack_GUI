@@ -11,12 +11,11 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -61,6 +60,8 @@ public class ItemListController {
     private TextField capacityField;
     @FXML
     private TextArea terminal;
+
+
     // Reference to the main application.
     private MainApp mainApp;
 
@@ -74,14 +75,6 @@ public class ItemListController {
 
 
 
-        this.capacityField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("[0-9]+")) {
-                mainApp.getCapacity().set(newValue);
-            } else {
-                capacityField.textProperty().set(oldValue);
-            }
-        });
-
         terminalBuffer.addListener((observable, oldValue, newValue) -> {
             if (newValue != "") {
                 terminal.appendText(newValue + "\n");
@@ -92,6 +85,88 @@ public class ItemListController {
             terminal.setScrollTop(Double.MAX_VALUE);
 
 
+        });
+
+
+        itemList.setOnKeyPressed((event) ->
+                {
+
+
+                    int selectedIndex = itemList.getSelectionModel().getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        if (event.getCode().equals(KeyCode.DELETE)) {
+                            handleDeleteItem();
+
+                        }
+
+                    }
+                }
+        );
+
+
+        itemList.cellFactoryProperty().set((p) -> {
+            ListCell cell = new ListCell<ItemFX>() {
+                @FXML
+                private Label nameLabel;
+
+                @FXML
+                private Label weightLabel;
+
+                @FXML
+                private Label valueLabel;
+
+                @FXML
+                private ImageView imageViewIcon;
+                private Image bagImage = new Image("/GUI/View/Images/bag.png");
+
+
+                private Pane pane;
+
+                private FXMLLoader mLLoader;
+
+                @Override
+                protected void updateItem(ItemFX item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null) {
+                        if (mLLoader == null) {
+
+                            mLLoader = new FXMLLoader();
+                            mLLoader.setLocation(mainApp.getClass().getResource("/GUI/View/ItemFXCell.fxml"));
+
+                            mLLoader.setController(this);
+
+                            try {
+                                pane = mLLoader.load();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        imageViewIcon.setImage(bagImage);
+                        imageViewIcon.setFitHeight(55);
+                        imageViewIcon.setFitWidth(60);
+                        imageViewIcon.setPreserveRatio(true);
+                        nameLabel.setText(item.getName());
+                        weightLabel.setText(item.getWeight() + "kg");
+                        valueLabel.setText("" + item.getValue() + "€");
+
+
+                        setText(null);
+                        setGraphic(pane);
+                    } else {
+                        setText(null);
+                        setGraphic(null);
+                    }
+                }
+
+            };
+
+            cell.addEventFilter(KeyEvent.KEY_PRESSED, (event) -> {
+                System.out.println("yea");
+
+            });
+
+            return cell;
         });
 
 
@@ -132,6 +207,7 @@ public class ItemListController {
             }
         });
 
+        nameField.promptTextProperty().set("optional");
         spinnerImage.setImage(new Image("/GUI/View/Images/spinner.gif"));
         spinnerImage.setFitHeight(120);
         spinnerImage.setFitWidth(120);
@@ -320,7 +396,7 @@ public class ItemListController {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(mainApp.getClass().getResource("/GUI/View/RandomItemsDialog.fxml"));
-            Pane page = (Pane) loader.load();
+            Pane page = loader.load();
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
@@ -430,6 +506,8 @@ public class ItemListController {
         capacityField.textProperty().bindBidirectional(mainApp.getCapacity());
 
         terminal.setScrollTop(Double.MIN_VALUE);
+        weightField.requestFocus();
+
 
 
     }

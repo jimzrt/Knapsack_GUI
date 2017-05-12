@@ -7,7 +7,7 @@ import java.util.*;
 import static java.util.Comparator.reverseOrder;
 
 
-public class BranchAndBoundSolver extends ASolver {
+public class BranchAndBoundSolver extends KnapsackSolver {
 
     @Override
     public String getName() {

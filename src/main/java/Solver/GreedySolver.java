@@ -9,7 +9,7 @@ import java.util.List;
 import static java.util.Comparator.reverseOrder;
 
 
-public class GreedySolver extends ASolver {
+public class GreedySolver extends KnapsackSolver {
     @Override
     public String getName() {
         return "Greedy Solver";

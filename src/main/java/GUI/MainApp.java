@@ -3,7 +3,7 @@ package GUI;
 import GUI.Controller.ItemListController;
 import GUI.Model.ItemFX;
 import GUI.Util.Converter;
-import Solver.ASolver;
+import Solver.KnapsackSolver;
 import Solver.Model.Item;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,7 +29,7 @@ public class MainApp extends Application {
     public static String[] SOLVER_CLASS_NAMES = new String[]{"GreedySolver", "BruteForceSolver", "BranchAndBoundSolver", "DynamicSolver", "DynamicSolverOpt"};
 
 
-    public SimpleStringProperty capacity = new SimpleStringProperty();
+    public SimpleStringProperty capacity = new SimpleStringProperty("15");
     boolean computing = false;
     ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         public Thread newThread(Runnable r) {
@@ -46,34 +46,10 @@ public class MainApp extends Application {
     private ObservableList<ItemFX> items = FXCollections.observableArrayList();
     private ObservableList<String> solvers;
 
-    private ASolver currentSolver = null;
+    private KnapsackSolver currentSolver = null;
     private Map idToNameMap;
 
-    /**
-     * Constructor
-     */
-    public MainApp() {
-        // Add some sample data
-//        items.add(new ItemFX(3, 4));
-//        items.add(new ItemFX(4, 5));
-//        items.add(new ItemFX(5, 6));
-//        items.add(new ItemFX(6, 7));
-        capacity.set("15");
 
-
-        //solvers = getSolversByClassName();
-
-
-        // ISolver solver = new DynamicSolver();
-//        for(ISolver solver : solvers){
-//            solver.setCapacity(15);
-//            solver.setItems(itemsS);
-//            solver.solve();
-//            System.out.println("Max Value: " + solver.getMaxValueSum());
-//        }
-
-
-    }
 
     public static void main(String[] args) {
         launch(args);
@@ -83,7 +59,7 @@ public class MainApp extends Application {
 
 
         // System.out.println(terminalBuffer.get());
-        if (currentSolver instanceof ASolver) {
+        if (currentSolver instanceof KnapsackSolver) {
             terminalBuffer.setValue("_______________________\n");
 
             terminalBuffer.setValue("Berechne " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
@@ -148,17 +124,13 @@ public class MainApp extends Application {
     //    return solvers;
     //}
 
-    ;
-
-    public ASolver getCurrentSolver() {
+    public KnapsackSolver getCurrentSolver() {
         return currentSolver;
     }
 
-    public void setCurrentSolver(ASolver solver) {
+    public void setCurrentSolver(KnapsackSolver solver) {
         currentSolver = solver;
     }
-
-    ;
 
     @Override
     public void start(Stage primaryStage) {
@@ -187,7 +159,7 @@ public class MainApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/GUI/View/MainGui.fxml"));
-            rootLayout = (Pane) loader.load();
+            rootLayout = loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
@@ -225,7 +197,7 @@ public class MainApp extends Application {
 
     public void loadSolver(String className, SimpleStringProperty terminalBuffer) {
         Class<?> clazz = null;
-        ASolver solver = null;
+        KnapsackSolver solver = null;
         try {
             clazz = Class.forName("Solver." + className);
         } catch (ClassNotFoundException e) {
@@ -238,7 +210,7 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
         try {
-            solver = (ASolver) ctor.newInstance();
+            solver = (KnapsackSolver) ctor.newInstance();
             setCurrentSolver(solver);
             solver.setOutputBuffer(terminalBuffer);
             terminalBuffer.setValue("=== " + solver.getName() + " geladen. ===");
@@ -253,10 +225,10 @@ public class MainApp extends Application {
 
 
     public void createNewInstance() {
-        Platform.runLater(() -> {
-            new MainApp().start(new Stage());
+        Platform.runLater(() ->
+                new MainApp().start(new Stage())
 
-        });
+        );
     }
 
     public void exit() {

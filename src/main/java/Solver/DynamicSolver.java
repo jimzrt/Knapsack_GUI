@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DynamicSolver extends ASolver {
+public class DynamicSolver extends KnapsackSolver {
 
     private int[][] matrix;
 

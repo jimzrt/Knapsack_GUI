@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public abstract class ASolver {
+public abstract class KnapsackSolver {
 
     List<Item> items;
     int capacity;
@@ -20,11 +20,11 @@ public abstract class ASolver {
 
     private SimpleStringProperty outputBuffer = new SimpleStringProperty();
 
-    public ASolver() {
+    public KnapsackSolver() {
     }
 
 
-    public ASolver(List<Item> items, int capacity) {
+    public KnapsackSolver(List<Item> items, int capacity) {
         this.items = items;
         this.capacity = capacity;
     }
