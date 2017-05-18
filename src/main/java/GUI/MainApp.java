@@ -1,6 +1,7 @@
 package GUI;
 
 import GUI.Controller.ItemListController;
+import GUI.Controller.ResultViewController;
 import GUI.Model.ItemFX;
 import GUI.Util.Converter;
 import Solver.KnapsackSolver;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -82,6 +84,8 @@ public class MainApp extends Application {
 
                     if (currentSolver.getItemSelection().size() > 0) {
 
+
+                        showResultWindow(getSelectedItems());
 
                     int index = 1;
                         StringBuilder itemListString = new StringBuilder();
@@ -176,6 +180,37 @@ public class MainApp extends Application {
             ItemListController controller = loader.getController();
             controller.setMainApp(this);
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void showResultWindow(List<ItemFX> selectedItems){
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(this.getClass().getResource("/GUI/View/ResultView.fxml"));
+            Pane page = loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Resultat");
+            dialogStage.setResizable(false);
+            dialogStage.initOwner(this.getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            ResultViewController controller = loader.getController();
+
+            controller.setItemList(selectedItems);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.show();
+
+            // FXCollections.sort(mainApp.getItems(),Comparator.comparingInt(ItemFX::getWeight));
 
         } catch (IOException e) {
             e.printStackTrace();
