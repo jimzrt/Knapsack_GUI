@@ -1,7 +1,9 @@
 package GUI.Controller;
 
 import GUI.Model.ItemFX;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 
 import java.util.List;
 
@@ -10,9 +12,9 @@ import java.util.List;
  */
 public class ResultViewController {
     @FXML
-    private List<ItemFX> itemList;
+    private ListView<ItemFX> itemList;
 
-    public void setItemList(List<ItemFX> itemList) {
-        this.itemList = itemList;
+    public void setItemList(ObservableList<ItemFX> itemList) {
+        this.itemList.setItems(itemList);
     }
 }

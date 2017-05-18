@@ -205,7 +205,7 @@ public class MainApp extends Application {
             // Set the person into the controller.
             ResultViewController controller = loader.getController();
 
-            controller.setItemList(selectedItems);
+            controller.setItemList(getSelectedItems());
 
             // Show the dialog and wait until the user closes it
             dialogStage.show();

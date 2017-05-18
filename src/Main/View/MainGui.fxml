@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="633.0" prefWidth="1128.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.ItemListController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+            <Menu mnemonicParsing="false" text="Import">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleRandomDialog" text="Zufall..." />
+                  <MenuItem mnemonicParsing="false" onAction="#handleFileImport" text="Datei..." />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Export">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Datei..." />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Hilfe">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Über" />
+               </items>
+            </Menu>
+      </menus>
+    </MenuBar>
+    <SplitPane dividerPositions="0.2211367673179396, 0.8214920071047958" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane>
+               <children>
+                  <Separator layoutX="14.0" layoutY="413.0" prefHeight="3.0" prefWidth="226.0" />
+                  <TitledPane animated="false" layoutX="14.0" layoutY="423.0" prefHeight="149.0" prefWidth="226.0" text="Gegenstand hinzufügen">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="224.0" styleClass="background">
+                           <children>
+                              <Label layoutX="9.0" layoutY="24.0" text="Gewicht:" />
+                              <Label layoutX="9.0" layoutY="65.0" text="Wert:" />
+                              <TextField fx:id="weightField" layoutX="100.0" layoutY="20.0" prefHeight="25.0" prefWidth="89.0" />
+                              <TextField fx:id="valueField" layoutX="100.0" layoutY="61.0" prefHeight="25.0" prefWidth="89.0" />
+                              <Button layoutX="-1.0" layoutY="96.0" mnemonicParsing="false" onAction="#handleAddItem" prefHeight="25.0" prefWidth="226.0" text="Hinzufügen" />
+                              <Label layoutX="196.0" layoutY="26.0" text="kg" />
+                              <Label layoutX="196.0" layoutY="65.0" text="€" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TextField fx:id="capacityField" layoutX="127.0" layoutY="14.0" prefHeight="25.0" prefWidth="81.0" />
+                  <Separator layoutX="14.0" layoutY="44.0" prefHeight="3.0" prefWidth="226.0" />
+                  <Button layoutX="14.0" layoutY="380.0" mnemonicParsing="false" onAction="#handleDeleteItem" prefHeight="25.0" prefWidth="226.0" text="Markiertes Element entfernen" />
+                  <Label layoutX="14.0" layoutY="53.0" text="Gegenstände:" />
+                  <Label layoutX="14.0" layoutY="18.0" text="Maximalgewicht:" />
+                  <Label layoutX="218.0" layoutY="18.0" text="kg" />
+                  <ListView fx:id="itemList" focusTraversable="false" layoutX="14.0" layoutY="70.0" prefHeight="310.0" prefWidth="226.0" />
+               </children>
+        </AnchorPane>
+            <TextArea fx:id="terminal" editable="false" focusTraversable="false" prefHeight="567.0" prefWidth="572.0" styleClass="terminal" wrapText="true">
+               <font>
+                  <Font name="Liberation Mono" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </TextArea>
+        <AnchorPane prefHeight="584.0" prefWidth="158.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="18.0" text="Solver:" />
+                  <ListView fx:id="solverList" focusTraversable="false" layoutX="10.0" layoutY="35.0" prefHeight="190.0" prefWidth="182.0" />
+                  <Button layoutX="10.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleLoadSolver" prefHeight="25.0" prefWidth="182.0" text="Lade" />
+                  <Button id="dark-blue" layoutX="15.0" layoutY="520.0" mnemonicParsing="false" onAction="#handleSolve" prefHeight="50.0" prefWidth="172.0" text="Berechne...">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Button>
+                  <ImageView fx:id="decorationImageView" fitHeight="181.0" fitWidth="182.0" layoutX="10.0" layoutY="327.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="spinnerImage" fitHeight="120.0" fitWidth="120.0" layoutX="41.0" layoutY="358.0" pickOnBounds="true" smooth="false" visible="false" />
+               </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="© James Tophoven" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label font="$x3" maxWidth="-1.0" text="ITTalents Submission 5/2017" textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>
