@@ -1,6 +1,7 @@
 package Solver;
 
 import Solver.Model.Item;
+import Solver.Model.Result;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -19,6 +20,8 @@ public abstract class KnapsackSolver {
     boolean isFinished = false;
 
     private SimpleStringProperty outputBuffer = new SimpleStringProperty();
+
+    private Result result = new Result();
 
     public KnapsackSolver() {
     }
@@ -80,11 +83,16 @@ public abstract class KnapsackSolver {
         return items.stream().mapToInt(Item::getValue).sum();
     }
 
+    public Result getResult() {
+        return new Result(getName(), 0, this.itemSelection, getMaxValueSum(), getTotalWeight(), this.capacity);
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
 
     public void setTerminalText(String text) {
-        Platform.runLater(() -> {
-            outputBuffer.set(text);
-        });
+        Platform.runLater(() -> outputBuffer.set(text));
 
     }
 }

@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -26,19 +25,16 @@ import javafx.util.Callback;
 import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 
 public class ItemListController {
 
     private static PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
     SimpleStringProperty terminalBuffer = new SimpleStringProperty();
-    private ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        public Thread newThread(Runnable r) {
-            Thread t = Executors.defaultThreadFactory().newThread(r);
-            t.setDaemon(true);
-            return t;
-        }
+    private ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = Executors.defaultThreadFactory().newThread(r);
+        t.setDaemon(true);
+        return t;
     });
     @FXML
     private ImageView spinnerImage;
@@ -76,7 +72,7 @@ public class ItemListController {
 
 
         terminalBuffer.addListener((observable, oldValue, newValue) -> {
-            if (newValue != "") {
+            if (!newValue.equals("")) {
                 terminal.appendText(newValue + "\n");
 
 
@@ -104,69 +100,60 @@ public class ItemListController {
         );
 
 
-        itemList.cellFactoryProperty().set((p) -> {
-            ListCell cell = new ListCell<ItemFX>() {
-                @FXML
-                private Label nameLabel;
+        itemList.cellFactoryProperty().set((p) -> new ListCell<ItemFX>() {
+            @FXML
+            private Label nameLabel;
 
-                @FXML
-                private Label weightLabel;
+            @FXML
+            private Label weightLabel;
 
-                @FXML
-                private Label valueLabel;
+            @FXML
+            private Label valueLabel;
 
-                @FXML
-                private ImageView imageViewIcon;
-                private Image bagImage = new Image("/GUI/View/Images/bag.png");
+            @FXML
+            private ImageView imageViewIcon;
+            private Image bagImage = new Image("/GUI/View/Images/bag.png");
 
 
-                private Pane pane;
+            private Pane pane;
 
-                private FXMLLoader mLLoader;
+            private FXMLLoader mLLoader;
 
-                @Override
-                protected void updateItem(ItemFX item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null) {
-                        if (mLLoader == null) {
+            @Override
+            protected void updateItem(ItemFX item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    if (mLLoader == null) {
 
-                            mLLoader = new FXMLLoader();
-                            mLLoader.setLocation(mainApp.getClass().getResource("/GUI/View/ItemFXCell.fxml"));
+                        mLLoader = new FXMLLoader();
+                        mLLoader.setLocation(mainApp.getClass().getResource("/GUI/View/ItemFXCell.fxml"));
 
-                            mLLoader.setController(this);
+                        mLLoader.setController(this);
 
-                            try {
-                                pane = mLLoader.load();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
+                        try {
+                            pane = mLLoader.load();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        imageViewIcon.setImage(bagImage);
-                        imageViewIcon.setFitHeight(55);
-                        imageViewIcon.setFitWidth(60);
-                        imageViewIcon.setPreserveRatio(true);
-                        nameLabel.setText(item.getName());
-                        weightLabel.setText(item.getWeight() + "kg");
-                        valueLabel.setText("" + item.getValue() + "€");
 
-
-                        setText(null);
-                        setGraphic(pane);
-                    } else {
-                        setText(null);
-                        setGraphic(null);
                     }
+                    imageViewIcon.setImage(bagImage);
+                    imageViewIcon.setFitHeight(45);
+                    imageViewIcon.setFitWidth(60);
+                    imageViewIcon.setPreserveRatio(true);
+                    nameLabel.setText(item.getName());
+                    weightLabel.setText(item.getWeight() + "kg");
+                    valueLabel.setText("" + item.getValue() + "€");
+
+
+                    setText(null);
+                    setGraphic(pane);
+                } else {
+                    setText(null);
+                    setGraphic(null);
                 }
+            }
 
-            };
-
-            cell.addEventFilter(KeyEvent.KEY_PRESSED, (event) -> {
-                System.out.println("yea");
-
-            });
-
-            return cell;
         });
 
 
@@ -241,8 +228,8 @@ public class ItemListController {
         terminalBuffer.set("\nBeschreibung:\n----------------");
         terminalBuffer.set("Das Rucksackproblem ist ein Optimierungsproblem der Kombinatorik. Aus einer Menge von Objekten, die jeweils ein Gewicht und einen Nutzwert haben, soll eine Teilmenge ausgewählt werden, deren Gesamtgewicht eine vorgegebene Gewichtsschranke nicht überschreitet. Unter dieser Bedingung soll der Nutzwert der ausgewählten Objekte maximiert werden.");
         terminalBuffer.set("\n\nBenutzung:\n----------------");
-        terminalBuffer.set("In der linken Spalte kann man das Maximalgewicht definieren und einzeln Gegenstände hinzufügen.");
-        terminalBuffer.set("Alternativ kann man über die Menüleiste Zufallsgegenstände generieren und hinzufügen, oder eine Textdatei importieren, in der das Maximalgewicht und Gegenstände definiert sind.");
+        terminalBuffer.set("In der linken Spalte kann man das Maximalgewicht festlegen und einzeln Gegenstände hinzufügen.");
+        terminalBuffer.set("Alternativ kann man über die Menüleiste Zufallsgegenstände generieren und hinzufügen, oder eine Textdatei importieren.");
         terminalBuffer.set("Zudem hat man die Möglichkeit die aktuelle Liste von Gegenständen und das Maxmialgewicht zu exportieren.\n");
 
         terminalBuffer.set("In der rechten Spalte kann man den Solver auswählen, der für die Berechnung und Gegenstands-Selektion zuständig ist.");
@@ -318,10 +305,10 @@ public class ItemListController {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 
                 //first line capacity and Length
-                bw.write(mainApp.getCapacity().get() + " " + mainApp.getItems().size());
+                bw.write(mainApp.getCapacity().get() + ";" + mainApp.getItems().size());
                 bw.newLine();
                 for (ItemFX item : mainApp.getItems()) {
-                    bw.write(item.getWeight() + " " + item.getValue());
+                    bw.write(item.getName() + ";" + item.getWeight() + ";" + item.getValue());
                     bw.newLine();
                 }
 
@@ -442,14 +429,14 @@ public class ItemListController {
 
                 //first line capacity and Length
                 String first = br.readLine();
-                if (first.matches("[0-9]+ [0-9]+")) {
-                    mainApp.getCapacity().set(first.split(" ")[0]);
-                    for (int i = 0; i < Integer.valueOf(first.split(" ")[1]); i++) {
+                if (first.matches("[0-9]+;[0-9]+")) {
+                    mainApp.getCapacity().set(first.split(";")[0]);
+                    for (int i = 0; i < Integer.valueOf(first.split(";")[1]); i++) {
                         String itemString = br.readLine();
-                        if (itemString.matches("[0-9]+ [0-9]+")) {
-                            String name = itemString.split(" ")[0];
-                            int weight = Integer.valueOf(itemString.split(" ")[1]);
-                            int value = Integer.valueOf(itemString.split(" ")[2]);
+                        if (itemString.matches("[a-zA-ZäöüßÄÖÜ()-_ ]+;[0-9]+;[0-9]+")) {
+                            String name = itemString.split(";")[0];
+                            int weight = Integer.valueOf(itemString.split(";")[1]);
+                            int value = Integer.valueOf(itemString.split(";")[2]);
                             mainApp.getItems().add(new ItemFX(name, weight, value));
                         } else {
                             terminalBuffer.set("Format-Error: " + itemString);
@@ -459,7 +446,7 @@ public class ItemListController {
 
                     }
 
-                    terminalBuffer.set(first.split(" ")[1] + " Gegenstände geladen - Maximalgewicht " + first.split(" ")[0] + "kg");
+                    terminalBuffer.set(first.split(";")[1] + " Gegenstände geladen - Maximalgewicht " + first.split(";")[0] + "kg");
                 } else {
                     terminalBuffer.set("Format-Error: " + first);
                 }

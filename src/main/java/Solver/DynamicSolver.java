@@ -38,6 +38,7 @@ public class DynamicSolver extends KnapsackSolver {
             setTerminalText("Berechne Item-Selektion..");
             this.itemSelection = getItemSelection(this.items, this.matrix);
 
+
         } catch (Throwable ex) {
             System.err.println("Uncaught exception - " + ex.getMessage());
             setTerminalText(ex.getMessage());
@@ -46,6 +47,7 @@ public class DynamicSolver extends KnapsackSolver {
 
         this.isFinished = true;
         setTerminalText(" ");
+        this.matrix = null;
     }
 
     @Override

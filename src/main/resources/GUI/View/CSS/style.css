@@ -54,12 +54,12 @@
 }
 
 
-#itemList {
+.itemList {
     -fx-focus-color: darkseagreen;
     -fx-faint-focus-color: transparent;
 }
 
-#itemList:focused .list-cell:filled:selected {
+.itemList:focused .list-cell:filled:selected {
 -fx-background-color: darkseagreen;
 
 }

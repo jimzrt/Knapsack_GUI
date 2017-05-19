@@ -6,6 +6,7 @@ import GUI.Model.ItemFX;
 import GUI.Util.Converter;
 import Solver.KnapsackSolver;
 import Solver.Model.Item;
+import Solver.Model.Result;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,11 +21,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class MainApp extends Application {
 
@@ -33,12 +32,10 @@ public class MainApp extends Application {
 
     public SimpleStringProperty capacity = new SimpleStringProperty("15");
     boolean computing = false;
-    ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        public Thread newThread(Runnable r) {
-            Thread t = Executors.defaultThreadFactory().newThread(r);
-            t.setDaemon(true);
-            return t;
-        }
+    ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = Executors.defaultThreadFactory().newThread(r);
+        t.setDaemon(true);
+        return t;
     });
     private Stage primaryStage;
     private Pane rootLayout;
@@ -61,7 +58,7 @@ public class MainApp extends Application {
 
 
         // System.out.println(terminalBuffer.get());
-        if (currentSolver instanceof KnapsackSolver) {
+        if (currentSolver != null) {
             terminalBuffer.setValue("_______________________\n");
 
             terminalBuffer.setValue("Berechne " + getItems().size() + " Gegenstände und " + getCapacity().get() + "kg Maximalgewicht mit " + currentSolver.getName() + "...\n");
@@ -75,31 +72,34 @@ public class MainApp extends Application {
                 currentSolver.setCapacity(Integer.valueOf(capacity.get()));
                 currentSolver.setItems(Converter.ItemsFXToItems(items));
                 currentSolver.solve();
+                Result result = currentSolver.getResult();
+                result.setComputingTime(System.currentTimeMillis() - time);
                 computing = false;
                 Platform.runLater(() -> {
-                    terminalBuffer.setValue("Rechenzeit: " + (System.currentTimeMillis() - time) + "ms");
-                    terminalBuffer.setValue("Maximaler Wert: " + currentSolver.getMaxValueSum() + "€");
-                    terminalBuffer.setValue("Gewicht: " + currentSolver.getTotalWeight() + "kg\n");
-                    terminalBuffer.setValue(currentSolver.getItemSelection().size() + " Ausgewählte Gegenstände: ");
 
-                    if (currentSolver.getItemSelection().size() > 0) {
+                    terminalBuffer.setValue("Rechenzeit: " + result.getComputingTime() + "ms");
+                    terminalBuffer.setValue("Maximaler Wert: " + result.getMaxValue() + "€");
+                    terminalBuffer.setValue("Gewicht: " + result.getWeight() + "kg\n");
+                    terminalBuffer.setValue(result.getItemSelection().size() + " ausgewählte Gegenstände: ");
+
+                    if (result.getItemSelection().size() > 0) {
 
 
-                        showResultWindow(getSelectedItems());
+                        showResultWindow(result);
 
-                    int index = 1;
+                        int index = 1;
                         StringBuilder itemListString = new StringBuilder();
                         itemListString.append(String.format("+%78s+\n", " ").replaceAll(" ", "-"));
                         itemListString.append(String.format("| %-10s| %-40s| %-10s| %-10s |\n", "Nummer", "Name", "Gewicht", "Wert"));
                         itemListString.append(String.format("+ %-10s+ %-40s+ %-10s+ %-10s +\n", " ", " ", " ", " ").replaceAll(" ", "-"));
 
-                    for (Item item : currentSolver.getItemSelection()) {
+                        for (Item item : result.getItemSelection()) {
 
-                        itemListString.append(String.format("| %-10s| %-40s| %-10s| %-10s |\n", index, item.getName(), item.getWeight() + "kg", item.getValue() + "€"));
-                        itemListString.append(String.format("+ %-10s+ %-40s+ %-10s+ %-10s +\n", " ", " ", " ", " ").replaceAll(" ", "-"));
-                        //itemListString.append(String.format("+%68s+\n", " ").replaceAll(" ", "-"));
-                        index++;
-                    }
+                            itemListString.append(String.format("| %-10s| %-40s| %-10s| %-10s |\n", index, item.getName(), item.getWeight() + "kg", item.getValue() + "€"));
+                            itemListString.append(String.format("+ %-10s+ %-40s+ %-10s+ %-10s +\n", " ", " ", " ", " ").replaceAll(" ", "-"));
+                            //itemListString.append(String.format("+%68s+\n", " ").replaceAll(" ", "-"));
+                            index++;
+                        }
                         terminalBuffer.set(itemListString.toString());
                         //terminalBuffer.setValue("_______________________\n");
 
@@ -187,7 +187,7 @@ public class MainApp extends Application {
     }
 
 
-    public void showResultWindow(List<ItemFX> selectedItems){
+    public void showResultWindow(Result result) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
@@ -200,12 +200,14 @@ public class MainApp extends Application {
             dialogStage.setResizable(false);
             dialogStage.initOwner(this.getPrimaryStage());
             Scene scene = new Scene(page);
+            String css = getClass().getResource("/GUI/View/CSS/style.css").toExternalForm();
+            scene.getStylesheets().add(css);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
             ResultViewController controller = loader.getController();
-
-            controller.setItemList(getSelectedItems());
+            controller.setStage(dialogStage);
+            controller.setResult(result);
 
             // Show the dialog and wait until the user closes it
             dialogStage.show();
@@ -232,7 +234,7 @@ public class MainApp extends Application {
 
     public void loadSolver(String className, SimpleStringProperty terminalBuffer) {
         Class<?> clazz = null;
-        KnapsackSolver solver = null;
+        KnapsackSolver solver;
         try {
             clazz = Class.forName("Solver." + className);
         } catch (ClassNotFoundException e) {
@@ -240,15 +242,20 @@ public class MainApp extends Application {
         }
         Constructor<?> ctor = null;
         try {
-            ctor = clazz.getConstructor();
+            if (clazz != null) {
+                ctor = clazz.getConstructor();
+            }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         try {
-            solver = (KnapsackSolver) ctor.newInstance();
-            setCurrentSolver(solver);
-            solver.setOutputBuffer(terminalBuffer);
-            terminalBuffer.setValue("=== " + solver.getName() + " geladen. ===");
+            if (ctor != null) {
+                solver = (KnapsackSolver) ctor.newInstance();
+
+                setCurrentSolver(solver);
+                solver.setOutputBuffer(terminalBuffer);
+                terminalBuffer.setValue("=== " + solver.getName() + " geladen. ===");
+            }
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
