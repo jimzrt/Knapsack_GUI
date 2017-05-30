@@ -433,10 +433,17 @@ public class ItemListController {
                     mainApp.getCapacity().set(first.split(";")[0]);
                     for (int i = 0; i < Integer.valueOf(first.split(";")[1]); i++) {
                         String itemString = br.readLine();
+                        //Format: Name;Weight;Value
                         if (itemString.matches("[a-zA-ZäöüßÄÖÜ()-_ ]+;[0-9]+;[0-9]+")) {
                             String name = itemString.split(";")[0];
                             int weight = Integer.valueOf(itemString.split(";")[1]);
                             int value = Integer.valueOf(itemString.split(";")[2]);
+                            mainApp.getItems().add(new ItemFX(name, weight, value));
+                        //Format Weight;Value (generate random name)
+                        } else if (itemString.matches("[0-9]+;[0-9]+")) {
+                            String name = NameGenerator.getRandomName();
+                            int weight = Integer.valueOf(itemString.split(";")[0]);
+                            int value = Integer.valueOf(itemString.split(";")[1]);
                             mainApp.getItems().add(new ItemFX(name, weight, value));
                         } else {
                             terminalBuffer.set("Format-Error: " + itemString);
