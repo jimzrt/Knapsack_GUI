@@ -1,6 +1,6 @@
 package GUI;
 
-import GUI.Controller.ItemListController;
+import GUI.Controller.MainGuiController;
 import GUI.Controller.ResultViewController;
 import GUI.Model.ItemFX;
 import GUI.Util.Converter;
@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,14 +39,11 @@ public class MainApp extends Application {
     });
     private Stage primaryStage;
     private Pane rootLayout;
-    /**
-     * The data as an observable list of Persons.
-     */
+
     private ObservableList<ItemFX> items = FXCollections.observableArrayList();
     private ObservableList<String> solvers;
 
     private KnapsackSolver currentSolver = null;
-    private Map idToNameMap;
 
 
 
@@ -124,9 +121,6 @@ public class MainApp extends Application {
         return items;
     }
 
-    // public String[] getSolvers() {
-    //    return solvers;
-    //}
 
     public KnapsackSolver getCurrentSolver() {
         return currentSolver;
@@ -138,21 +132,21 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //System.setProperty("prism.lcdtext", "false");
-        // System.setProperty("prism.text", "t2k");
+
         Font.loadFont(getClass().getResource("/GUI/View/Fonts/Roboto-Regular.ttf").toExternalForm(), 12);
         Font.loadFont(getClass().getResource("/GUI/View/Fonts/UbuntuMono-R.ttf").toExternalForm(), 12);
 
 
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Rucksackproblem - Löser");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/Gui/View/Images/icon.png")));
+
+
         primaryStage.setResizable(false);
 
-        //setUserAgentStylesheet(STYLESHEET_MODENA);
 
         initRootLayout();
 
-        // showPersonOverview();
     }
 
     /**
@@ -177,7 +171,7 @@ public class MainApp extends Application {
 
 
             // Give the controller access to the main app.
-            ItemListController controller = loader.getController();
+            MainGuiController controller = loader.getController();
             controller.setMainApp(this);
 
 

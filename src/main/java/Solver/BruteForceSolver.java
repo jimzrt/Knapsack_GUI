@@ -8,14 +8,6 @@ import java.util.List;
 
 public class BruteForceSolver extends KnapsackSolver {
 
-    public BruteForceSolver() {
-
-    }
-
-
-    public BruteForceSolver(List<Item> items, int capacity) {
-        super(items, capacity);
-    }
 
     @Override
     public String getName() {

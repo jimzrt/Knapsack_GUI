@@ -27,21 +27,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ItemListController {
+public class MainGuiController {
 
+    //css class for selected items in a list
     private static PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
+
+    //StringProperty that acts as buffer for text which gets printed to the terminal window
     SimpleStringProperty terminalBuffer = new SimpleStringProperty();
+
+    //executor service for threads
     private ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setDaemon(true);
         return t;
     });
+
+    //gui elements defined in maingui.fxml
     @FXML
     private ImageView spinnerImage;
     @FXML
     private ImageView decorationImageView;
-    @FXML
-    private Pane waitPane;
     @FXML
     private ListView<ItemFX> itemList;
     @FXML
@@ -61,33 +66,29 @@ public class ItemListController {
     // Reference to the main application.
     private MainApp mainApp;
 
+
     @FXML
     private void initialize() {
 
-
+        //add validition to input fields
         Validator.createSimpleNumberValidator(capacityField);
         Validator.createSimpleNumberValidator(weightField);
         Validator.createSimpleNumberValidator(valueField);
 
 
-
+        //observe terminal buffer to print changes into terminal gui
         terminalBuffer.addListener((observable, oldValue, newValue) -> {
             if (!newValue.equals("")) {
                 terminal.appendText(newValue + "\n");
-
-
                 terminalBuffer.setValue("");
             }
             terminal.setScrollTop(Double.MAX_VALUE);
-
-
         });
 
 
+        //delete item if selected in list and delete key is pressed
         itemList.setOnKeyPressed((event) ->
                 {
-
-
                     int selectedIndex = itemList.getSelectionModel().getSelectedIndex();
                     if (selectedIndex != -1) {
                         if (event.getCode().equals(KeyCode.DELETE)) {
@@ -100,6 +101,7 @@ public class ItemListController {
         );
 
 
+        //change how items in list are rendered -> own fxml file to add icon and custom text
         itemList.cellFactoryProperty().set((p) -> new ListCell<ItemFX>() {
             @FXML
             private Label nameLabel;
@@ -157,6 +159,7 @@ public class ItemListController {
         });
 
 
+        //add functionality to solverlist to mark the current solver as active (green) and to choose solver by double clicking
         solverList.cellFactoryProperty().set(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
@@ -179,7 +182,6 @@ public class ItemListController {
 
                 cell.addEventFilter(MouseEvent.MOUSE_CLICKED, (event) -> {
                     if (event.getClickCount() == 2) {
-                        //  System.out.println("double clicked!");
                         ListCell c = (ListCell) event.getSource();
                         if (!c.getText().equals("")) {
                             handleLoadSolver();
@@ -194,6 +196,7 @@ public class ItemListController {
             }
         });
 
+        //define gui elements
         nameField.promptTextProperty().set("optional");
         spinnerImage.setImage(new Image("/GUI/View/Images/spinner.gif"));
         spinnerImage.setFitHeight(120);
@@ -205,7 +208,7 @@ public class ItemListController {
         decorationImageView.setFitWidth(180);
         decorationImageView.setPreserveRatio(true);
 
-
+        //add default text to terminal
         terminalBuffer.set("\n██████╗  █████╗ ███████╗                                              \n" +
                 "██╔══██╗██╔══██╗██╔════╝                                              \n" +
                 "██║  ██║███████║███████╗                                              \n" +
@@ -230,7 +233,7 @@ public class ItemListController {
         terminalBuffer.set("\n\nBenutzung:\n----------------");
         terminalBuffer.set("In der linken Spalte kann man das Maximalgewicht festlegen und einzeln Gegenstände hinzufügen.");
         terminalBuffer.set("Alternativ kann man über die Menüleiste Zufallsgegenstände generieren und hinzufügen, oder eine Textdatei importieren.");
-        terminalBuffer.set("Zudem hat man die Möglichkeit die aktuelle Liste von Gegenständen und das Maxmialgewicht zu exportieren.\n");
+        terminalBuffer.set("Die aktuelle Liste von Gegenständen und das Maxmialgewicht lässt sich exportieren.\n");
 
         terminalBuffer.set("In der rechten Spalte kann man den Solver auswählen, der für die Berechnung und Gegenstands-Selektion zuständig ist.");
         terminalBuffer.set("Fur jeden Solven kann man eine Beschreibung ausgeben lassen, die ihn näher erläutert, daher nur auf die Problemgröße (Maximalgewicht und Anzahl der Gegenstände) bezogen:\n");
@@ -243,6 +246,23 @@ public class ItemListController {
 
     }
 
+
+    //link controller to program
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+
+        // Add observable list data to the table
+        itemList.setItems(mainApp.getItems());
+
+        solverList.setItems(FXCollections.observableArrayList(MainApp.SOLVER_CLASS_NAMES));
+
+        capacityField.textProperty().bindBidirectional(mainApp.getCapacity());
+
+        terminal.setScrollTop(Double.MIN_VALUE);
+        weightField.requestFocus();
+
+
+    }
 
     @FXML
     private void handleAddItem() {
@@ -273,13 +293,13 @@ public class ItemListController {
 
     }
 
+
     @FXML
     private void handleClose() {
 
         mainApp.exit();
 
     }
-
 
     @FXML
     private void handleDeleteItem() {
@@ -352,7 +372,6 @@ public class ItemListController {
 
         spinnerImage.visibleProperty().set(true);
         decorationImageView.visibleProperty().set(false);
-        // waitPane.visibleProperty().set(true);
         mainApp.solve(terminalBuffer);
 
         executor.submit(() -> {
@@ -375,6 +394,7 @@ public class ItemListController {
 
 
     }
+
 
     @FXML
     public void handleRandomDialog() {
@@ -409,8 +429,6 @@ public class ItemListController {
         }
 
     }
-
-
 
     @FXML
     public void handleFileImport() {
@@ -488,23 +506,6 @@ public class ItemListController {
     public void handleClearItems() {
         mainApp.getItems().clear();
         terminalBuffer.set("Gegenstände geleert!");
-    }
-
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-
-        // Add observable list data to the table
-        itemList.setItems(mainApp.getItems());
-
-        solverList.setItems(FXCollections.observableArrayList(MainApp.SOLVER_CLASS_NAMES));
-
-        capacityField.textProperty().bindBidirectional(mainApp.getCapacity());
-
-        terminal.setScrollTop(Double.MIN_VALUE);
-        weightField.requestFocus();
-
-
-
     }
 
 

@@ -17,7 +17,7 @@ public class GreedySolver extends KnapsackSolver {
 
     @Override
     public String getDescription() {
-        return null;
+        return "";
     }
 
     @Override

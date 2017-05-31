@@ -16,7 +16,7 @@ public class BranchAndBoundSolver extends KnapsackSolver {
 
     @Override
     public String getDescription() {
-        return null;
+        return "";
     }
 
     @Override

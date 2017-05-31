@@ -11,14 +11,6 @@ public class DynamicSolverOpt extends KnapsackSolver {
     private int[][] matrix;
 
 
-    public DynamicSolverOpt() {
-        super();
-    }
-
-    public DynamicSolverOpt(List<Item> items, int capacity) {
-        super(items, capacity);
-    }
-
     @Override
     public String getName() {
         return "Dynamic Solver Optimized";

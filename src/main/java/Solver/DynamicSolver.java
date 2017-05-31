@@ -11,14 +11,6 @@ public class DynamicSolver extends KnapsackSolver {
     private int[][] matrix;
 
 
-    public DynamicSolver() {
-        super();
-    }
-
-    public DynamicSolver(List<Item> items, int capacity) {
-        super(items, capacity);
-    }
-
     @Override
     public String getName() {
         return "Dynamic Solver";
